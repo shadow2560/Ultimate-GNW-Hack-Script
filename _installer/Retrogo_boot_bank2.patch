@@ -1,0 +1,56 @@
+diff --git a/Core/Inc/main.h b/Core/Inc/main.h
+index fd8c6e6..2c56c6f 100644
+--- a/Core/Inc/main.h
++++ b/Core/Inc/main.h
+@@ -155,6 +155,7 @@ void wdog_refresh(void);
+ #define BOOT_MAGIC_WATCHDOG 0xd066cafe
+ #define BOOT_MAGIC_BSOD     0xbad00000
+ #define BOOT_MAGIC_FLASHAPP 0xf1a5f1a5
++#define BOOT_MAGIC_BANK2    0xb001b222
+ 
+ #define BOOT_MAGIC_BSOD_MASK 0xffff0000
+ 
+diff --git a/Core/Src/main.c b/Core/Src/main.c
+index 17614bc..c824fda 100644
+--- a/Core/Src/main.c
++++ b/Core/Src/main.c
+@@ -347,6 +347,13 @@ void wdog_refresh()
+   }
+ }
+ 
++static void  __attribute__((naked)) start_app(void (* const pc)(void), uint32_t sp) {
++    __asm("           \n\
++          msr msp, r1 /* load r1 into MSP */\n\
++          bx r0       /* branch to the address at r0 */\n\
++    ");
++}
++
+ /* USER CODE END 0 */
+ 
+ /**
+@@ -389,6 +396,12 @@ int main(void)
+   case BOOT_MAGIC_FLASHAPP:
+     boot_mode = BOOT_MODE_FLASHAPP;
+     break;
++  case BOOT_MAGIC_BANK2:
++    boot_magic_set(BOOT_MAGIC_RESET);
++    uint32_t sp = *((uint32_t *)0x08100000); // Bank2 SP @ offset 0x00
++    uint32_t pc = *((uint32_t *)0x08100004); // Bank2 PC @ offset 0x04
++    start_app((void (* const)(void)) pc, (uint32_t) sp);
++    break;
+   default:
+     if ((boot_magic & BOOT_MAGIC_BSOD_MASK) == BOOT_MAGIC_BSOD) {
+       uint16_t fault_idx = boot_magic & 0xffff;
+@@ -450,6 +463,12 @@ int main(void)
+   // Save the button states as early as possible
+   boot_buttons = buttons_get();
+ 
++  // Boot bank2 if Left is pressed at boot time
++  if (boot_buttons & B_Left) {
++    boot_magic_set(BOOT_MAGIC_BANK2);
++    HAL_NVIC_SystemReset();
++  }
++
+   lcd_backlight_off();
+ 
+   /* Power off LCD and external Flash */
