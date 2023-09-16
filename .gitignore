@@ -1,0 +1,5 @@
+./game-and-watch-backup/*
+.*game-and-watch-patch/*
+./game-and-watch-retro-go/*
+./game-and-watch-zelda3/*
+./gcc-arm-none-eabi-10.3-2021.10/*
