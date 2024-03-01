@@ -71,8 +71,9 @@ goto main
 
 :head
 	CLS
-	echo === Game-and-Watch-MSYS2 Installer ==
-	echo ========== v0.1 by ManCloud =========
+	title Ultimate-GNW-Hack-Script v1.0.0
+	echo === Ultimate-GNW-Hack-Script ==
+	echo ========== v1.0.0 by Shadow256, originaly made by ManCloud =========
 	echo -------------------------------------
 	echo.
 	echo General Settings:
