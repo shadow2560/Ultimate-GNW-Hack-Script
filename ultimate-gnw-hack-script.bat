@@ -139,10 +139,10 @@ goto eof
 	echo - [Main Menu] -----------------------
 	echo.
 	echo 1. Install Msys2
-	echo 2. Install Build-Environment 
+	echo 2. Install/update Build-Environment 
 	echo 3. Init/Update Repos
 	echo 4. GnW-Backup Menu
-	echo 5. Flash GnW-Patch ^(needs Backup^)
+	echo 5. Flash GnW-Patch ^(needs Backup files in "game-and-watch-patch" folder^)
 	echo 6. Flash GnW-Retro-Go
 	echo 7. Flash GnW-Zelda3
 	echo.
@@ -206,7 +206,7 @@ goto main
 	echo 2. Backup Ext-Flash
 	echo 3. Backup Int-Flash
 	echo 4. Unlock Device
-	echo 5. Restore Device
+	echo 5. Restore Device ^(need Backup files in "game-and-watch-backup\backups" folder^)
 	echo -------------------------------------
 	echo.
 	echo S. General Settings Menu
