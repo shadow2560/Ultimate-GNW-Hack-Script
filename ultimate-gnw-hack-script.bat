@@ -42,7 +42,6 @@ if '%1'=='ELEV' (del "%vbsGetPrivileges%" 1>nul 2>nul  &  shift /1)
 
 rem ------------ START OF ACTUAL SCRIPT ------------------------------------------------
 setlocal EnableDelayedExpansion
-set mingw64_path=C:\msys64\mingw64.exe
 set system=zelda
 set storage_meg=64
 set adapter=stlink
@@ -63,9 +62,9 @@ set retrogo_old_nes_emulator=0
 SET zelda3_lng=us
 set zelda3_savestate=0
 
-set base_script_slash_path=%~dp0
-set base_script_slash_path=%base_script_slash_path:\=/%
-echo %base_script_slash_path%
+set base_script_path=%~dp0
+set base_script_slash_path=%base_script_path:\=/%
+set mingw64_path=%base_script_path%\msys2\mingw64.exe
 
 goto main
 
@@ -139,12 +138,13 @@ goto eof
 	call :head
 	echo - [Main Menu] -----------------------
 	echo.
-	echo 1. Install Build-Environment 
-	echo 2. Init/Update Repos
-	echo 3. GnW-Backup Menu
-	echo 4. Flash GnW-Patch ^(needs Backup^)
-	echo 5. Flash GnW-Retro-Go
-	echo 6. Flash GnW-Zelda3
+	echo 1. Install Msys2
+	echo 2. Install Build-Environment 
+	echo 3. Init/Update Repos
+	echo 4. GnW-Backup Menu
+	echo 5. Flash GnW-Patch ^(needs Backup^)
+	echo 6. Flash GnW-Retro-Go
+	echo 7. Flash GnW-Zelda3
 	echo.
 	echo -------------------------------------
 	echo.
@@ -158,19 +158,44 @@ goto eof
 	set val_m=0
 	SET IN_M=
 	SET /P IN_M=Please select a number: 
-	IF /I '%IN_M%'=='1' set val_m=1 & call :install_env
-	IF /I '%IN_M%'=='2' set val_m=1 & call :run_mingw64 _installer/ , pull_repos.sh
-	IF /I '%IN_M%'=='3' set val_m=1 & call :backup_menu
-	IF /I '%IN_M%'=='4' set val_m=1 & call :run_patch
-	IF /I '%IN_M%'=='5' set val_m=1 & call :run_retrogo
-	IF /I '%IN_M%'=='6' set val_m=1 & call :run_zelda3
+	IF /I '%IN_M%'=='1' (
+		set val_m=1
+		echo Downloading Msys2 installer...
+		"_installer\wget.exe" -q https://github.com/msys2/msys2-installer/releases/download/2024-01-13/msys2-x86_64-20240113.exe -O "_installer\msys2_installer.exe"
+		IF %errorlevel% EQU 0 (
+			.\_installer\msys2_installer.exe -t "%base_script_path%\msys2" --am --al -c -g ifw.*=true in
+		) else (
+			echo Error when downloading Msys2.
+			pause
+			goto main
+		)
+		IF %errorlevel% EQU 0 (
+			del /q "_installer\msys2_installer.exe" >nul
+			del /q InstallationLog.txt >nul
+			echo Installation of Msys2 succesful.
+			pause
+			goto main
+		) else (
+			del /q "_installer\msys2_installer.exe" >nul
+			del /q InstallationLog.txt >nul
+			echo Installation of Msys2 failed.
+			pause
+			goto main
+		)
+	)
+	IF /I '%IN_M%'=='2' set val_m=1 & call :install_env
+	IF /I '%IN_M%'=='3' set val_m=1 & call :run_mingw64 _installer/ , pull_repos.sh
+	IF /I '%IN_M%'=='4' set val_m=1 & call :backup_menu
+	IF /I '%IN_M%'=='5' set val_m=1 & call :run_patch
+	IF /I '%IN_M%'=='6' set val_m=1 & call :run_retrogo
+	IF /I '%IN_M%'=='7' set val_m=1 & call :run_zelda3
 	IF /I '%IN_M%'=='S' set val_m=1 & call :settings
 	IF /I '%IN_M%'=='R' set val_m=1 & call :retrogo_settings
 	IF /I '%IN_M%'=='Z' set val_m=1 & call :zelda3_settings
 	IF /I '%IN_M%'=='Q' set val_m=1 & GOTO eof
 	IF /I '%IN_M%'=='' set val_m=1
 
-	if %val_m%==0 call :invald_input 1, 6
+	if %val_m%==0 call :invald_input 1, 7
 goto main
 
 :backup_menu
