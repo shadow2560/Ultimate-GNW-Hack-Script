@@ -40,7 +40,7 @@ if [ -d "./../$folder" ]; then
 	git pull --recurse-submodules
 	cd $S_DIR
 else
-    git clone --recurse-submodules https://github.com/sylverb/game-and-watch-retro-go ./../$folder
+    git clone --recurse-submodules https://github.com/sylverb/game-and-watch-retro-go.git ./../$folder
 fi
 cp -r ./resources/$folder/* ./../$folder/
 
