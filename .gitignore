@@ -1,3 +1,4 @@
+./_installer/.wget-hsts
 ./msys2/*
 ./game-and-watch-backup/*
 ./game-and-watch-patch/*
