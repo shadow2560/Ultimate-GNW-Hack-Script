@@ -1,7 +1,12 @@
 /_installer/.wget-hsts
+/_installer/resources/game-and-watch-backup/backups/*.bin
+/_installer/resources/game-and-watch-patch/*.bin
+/_installer/resources/game-and-watch-smw/smw/assets/*.sfc
+/_installer/resources/game-and-watch-zelda3/zelda3/tables/*.sfc
 /msys2
 /game-and-watch-backup
 /game-and-watch-patch
 /game-and-watch-retro-go
+/game-and-watch-smw
 /game-and-watch-zelda3
 /gcc-arm-none-eabi-10.3-2021.10
