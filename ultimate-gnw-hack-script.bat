@@ -81,9 +81,9 @@ goto main
 	echo System: %system%
 	echo Selected Storage: %storage_meg% MBytes 
 	if %boot_type%==1 (
-		echo Boot type: Dual boot ^(CFW patch in bank 1 and Retrogo or Zelda3 in bank 2^)
+		echo Boot type: Dual boot ^(CFW patch in bank 1 and Retrogo or Zelda3 or Super Mario World in bank 2^)
 	) else if %boot_type%==2 (
-		echo Boot type: Dual boot ^(Retrogo in bank 1 and Zelda3 in bank 2^)
+		echo Boot type: Dual boot ^(Retrogo in bank 1 and Zelda3 or Super Mario World in bank 2^)
 	) else if %boot_type%==3 (
 		echo Boot type: Triple boot ^(Retrogo very limited^)
 	) else (
@@ -127,10 +127,10 @@ goto main
 	if %retrogo_splash_screen%==0 (echo Retrogo splash screen on boot: Enabled) else (echo Retrogo splash screen on boot: Disabled)
 	if %retrogo_old_nes_emulator%==1 (echo Retrogo use old NES emulator: Enabled) else (echo Retrogo use old NES emulator: Disabled)
 	echo.
-	echo Zelda3 Settings:
+	echo Zelda3 and Super Mario World Settings:
 	echo.
 	echo Zelda3 language: %zelda3_lng%
-	if %zelda3_savestate%==1 (echo Zelda3 savestate: Enabled) else (echo Zelda3 savestate: Disabled)
+	if %zelda3_savestate%==1 (echo Zelda3 and Super Mario World savestate: Enabled) else (echo Zelda3 and Super Mario World savestate: Disabled)
 	echo.
 goto eof
 
@@ -145,12 +145,13 @@ goto eof
 	echo 5. Flash GnW-Patch ^(needs Backup files in "game-and-watch-patch" folder^)
 	echo 6. Flash GnW-Retro-Go
 	echo 7. Flash GnW-Zelda3
+	echo 8. Flash GnW-Super-Mario-World
 	echo.
 	echo -------------------------------------
 	echo.
 	echo S. General Settings Menu
 	echo R. Retrogo Settings Menu
-	echo Z. Zelda3 Settings Menu
+	echo Z. Zelda3 and Super Mario World Settings Menu
 	echo Q. Quit
 	echo.
 	echo -------------------------------------
@@ -189,13 +190,14 @@ goto eof
 	IF /I '%IN_M%'=='5' set val_m=1 & call :run_patch
 	IF /I '%IN_M%'=='6' set val_m=1 & call :run_retrogo
 	IF /I '%IN_M%'=='7' set val_m=1 & call :run_zelda3
+	IF /I '%IN_M%'=='8' set val_m=1 & call :run_smw
 	IF /I '%IN_M%'=='S' set val_m=1 & call :settings
 	IF /I '%IN_M%'=='R' set val_m=1 & call :retrogo_settings
 	IF /I '%IN_M%'=='Z' set val_m=1 & call :zelda3_settings
 	IF /I '%IN_M%'=='Q' set val_m=1 & GOTO eof
 	IF /I '%IN_M%'=='' set val_m=1
 
-	if %val_m%==0 call :invald_input 1, 7
+	if %val_m%==0 call :invald_input 1, 8
 goto main
 
 :backup_menu
@@ -449,10 +451,10 @@ goto eof
 
 :zelda3_settings
 	call :head
-	echo - [Zelda3 Settings Menu ] ------------------
+	echo - [Zelda3 and Super Mario World Settings Menu ] ------------------
 	echo.
 	echo 1. Set Zelda3 Language Code
-	echo 2. Toggle Zelda3 Savestate
+	echo 2. Toggle Zelda3 and Super Mario World Savestate
 	echo.
 	echo -------------------------------------
 	echo.
@@ -551,6 +553,15 @@ goto eof
 	pause
 	goto eof
 
+:run_smw
+	if  exist .\game-and-watch-smw\smw\assets\smw.sfc (
+		call :run_mingw64 ./game-and-watch-smw/, "build.sh %adapter% %system% %storage_meg% %boot_type% %clean_build% %proc_number% %zelda3_savestate%"
+		goto:eof
+	)
+	echo "Please put a copy of \"smw.sfc\" ^(rom USA of Super Mario World^) into folder \".\game-and-watch-smw\smw\assets\""
+	pause
+	goto eof
+
 :run_patch
 	if %boot_type%==0 (
 		echo Not possible to use this function in single mode boot.
@@ -558,7 +569,7 @@ goto eof
 		goto eof
 	)
 	if %boot_type%==2 (
-		echo Not possible to use this function in dual boot Retrogo + Zelda3.
+		echo Not possible to use this function in dual boot Retrogo + Zelda3 or Super Mario World.
 		pause
 		goto eof
 	)

@@ -1,0 +1,59 @@
+run=1
+[ -z "$1" ] && run="" #adapter
+[ -z "$2" ] && run="" #system
+[ -z "$3" ] && run="" #size_mb
+[ -z "$4" ] && run="" #triple_boot
+[ -z "$5" ] && run="" #clean_build
+[ -z "$6" ] && run="" #Proc number
+[ -z "$7" ] && run="" #SMW savestate
+
+if [ ! -z "$run" ]; then
+	size=$3
+	if [ $5 -ge 1 ]; then make clean; fi
+	if [ $4 -eq 1 ]; then
+		if [ $3 -eq 4 ]; then #dual boot with CFW on 4MByte flash
+			echo make -j$6 INTFLASH_BANK=2 EXTFLASH_SIZE_MB=3 EXTFLASH_OFFSET=868352 ADAPTER=$1 GNW_TARGET=$2 ENABLE_SAVESTATE=$7 flash
+			make -j$6 INTFLASH_BANK=2 EXTFLASH_SIZE_MB=3 EXTFLASH_OFFSET=868352 ADAPTER=$1 GNW_TARGET=$2 ENABLE_SAVESTATE=$7 flash
+		else
+			if [ $3 -ge 64 ]; then LARGE_FLASH=1; else LARGE_FLASH=0; fi
+			if [ "$2" == "zelda" ]; then
+				((size=size-4))
+				echo make -j$6 INTFLASH_BANK=2 EXTFLASH_SIZE=2097152 EXTFLASH_OFFSET=4194304 GNW_TARGET=$2 flash ADAPTER=$1 LARGE_FLASH=%LARGE_FLASH ENABLE_SAVESTATE=$7 flash
+				make -j$6 INTFLASH_BANK=2 EXTFLASH_SIZE=2097152 EXTFLASH_OFFSET=4194304 GNW_TARGET=$2 flash ADAPTER=$1 LARGE_FLASH=%LARGE_FLASH ENABLE_SAVESTATE=$7 flash
+			else
+				((size=size-1))
+				echo make -j$6 INTFLASH_BANK=2 EXTFLASH_SIZE=2097152 EXTFLASH_OFFSET=1048576 GNW_TARGET=$2 flash ADAPTER=$1 LARGE_FLASH=%LARGE_FLASH ENABLE_SAVESTATE=$7 flash
+				make -j$6 INTFLASH_BANK=2 EXTFLASH_SIZE=2097152 EXTFLASH_OFFSET=1048576 GNW_TARGET=$2 flash ADAPTER=$1 LARGE_FLASH=%LARGE_FLASH ENABLE_SAVESTATE=$7 flash
+			fi
+		fi
+	elif [ $4 -eq 2 ]; then
+		if [ $3 -eq 4 ]; then #dual boot with Retrogo on 4MByte flash
+			echo make -j$6 INTFLASH_BANK=2 EXTFLASH_SIZE=2097152 EXTFLASH_OFFSET=0 ADAPTER=$1 GNW_TARGET=$2 ENABLE_SAVESTATE=$7 flash
+			make -j$6 INTFLASH_BANK=2 EXTFLASH_SIZE=2097152 EXTFLASH_OFFSET=0 ADAPTER=$1 GNW_TARGET=$2 ENABLE_SAVESTATE=$7 flash
+		else
+			if [ $3 -ge 64 ]; then LARGE_FLASH=1; else LARGE_FLASH=0; fi
+			echo make -j$6 INTFLASH_BANK=2 EXTFLASH_SIZE=2097152 EXTFLASH_OFFSET=0 GNW_TARGET=$2 flash ADAPTER=$1 LARGE_FLASH=%LARGE_FLASH ENABLE_SAVESTATE=$7 flash
+			make -j$6 INTFLASH_BANK=2 EXTFLASH_SIZE=2097152 EXTFLASH_OFFSET=0 GNW_TARGET=$2 flash ADAPTER=$1 LARGE_FLASH=%LARGE_FLASH ENABLE_SAVESTATE=$7 flash
+		fi
+	elif [ $4 -eq 3 ]; then
+		if [ $3 -eq 4 ]; then #triple boot on 4MByte flash
+			echo make -j$6 INTFLASH_BANK=2 EXTFLASH_SIZE=1703936 EXTFLASH_OFFSET=868352 ADAPTER=$1 GNW_TARGET=$2 ENABLE_SAVESTATE=$7 flash
+			make -j$6 INTFLASH_BANK=2 EXTFLASH_SIZE=1703936 EXTFLASH_OFFSET=868352 ADAPTER=$1 GNW_TARGET=$2 ENABLE_SAVESTATE=$7 flash
+		else
+			if [ $3 -ge 64 ]; then LARGE_FLASH=1; else LARGE_FLASH=0; fi
+			if [ "$2" == "zelda" ]; then
+				echo make -j$6 INTFLASH_BANK=2 EXTFLASH_SIZE=2097152 EXTFLASH_OFFSET=4194304 GNW_TARGET=$2 flash ADAPTER=$1 LARGE_FLASH=%LARGE_FLASH ENABLE_SAVESTATE=$7 flash
+				make -j$6 INTFLASH_BANK=2 EXTFLASH_SIZE=2097152 EXTFLASH_OFFSET=4194304 GNW_TARGET=$2 flash ADAPTER=$1 LARGE_FLASH=%LARGE_FLASH ENABLE_SAVESTATE=$7 flash
+			else
+				echo make -j$6 INTFLASH_BANK=2 EXTFLASH_SIZE=2097152 EXTFLASH_OFFSET=1048576 GNW_TARGET=$2 flash ADAPTER=$1 LARGE_FLASH=%LARGE_FLASH ENABLE_SAVESTATE=$7 flash
+				make -j$6 INTFLASH_BANK=2 EXTFLASH_SIZE=2097152 EXTFLASH_OFFSET=1048576 GNW_TARGET=$2 flash ADAPTER=$1 LARGE_FLASH=%LARGE_FLASH ENABLE_SAVESTATE=$7 flash
+			fi
+		fi
+	else #Single boot
+		if [ $3 -ge 64 ]; then LARGE_FLASH=1; else LARGE_FLASH=0; fi
+		echo make -j$6 EXTFLASH_SIZE_MB=$3 GNW_TARGET=$2 flash ADAPTER=$1 LARGE_FLASH=%LARGE_FLASH ENABLE_SAVESTATE=$7 flash
+		make -j$6 EXTFLASH_SIZE_MB=$3 GNW_TARGET=$2 flash ADAPTER=$1 LARGE_FLASH=%LARGE_FLASH ENABLE_SAVESTATE=$7 flash
+	fi
+else
+	echo "missing parameters. Run with ./build.sh [pico|stlink] [mario|zelda] [4 ... 512]"
+fi

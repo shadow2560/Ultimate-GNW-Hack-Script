@@ -8,7 +8,7 @@ Largely based on the work of [this project of ManCloud](https://github.com/ManCl
 
 You must install the drivers of your adapter yourself, this will be not covered by the script. For now only Pico and Stlink adapters are supported by the script.
 
-You must know how to configure the different elements installed on the Game-and-Watch (how to backup it, unlock it, install CFW, install Retro-go and install Zelda3), for example you should know where to place the original backup of the Game-and-Watch to install the CFW or you should know where to place the roms for Retro-go, all these things will not be covered here. The script will only help you to setup correctly the commands used to flash the elements.
+You must know how to configure the different elements installed on the Game-and-Watch (how to backup it, unlock it, install CFW, install Retro-go, install Super Mario World and install Zelda3), for example you should know where to place the original backup of the Game-and-Watch to install the CFW or you should know where to place the roms for Retro-go, all these things will not be covered here. The script will only help you to setup correctly the commands used to flash the elements.
 
 Pin out and method to launch the flash will not be covered here
 
@@ -40,4 +40,5 @@ Note: With the explained dual boot configuration you can launch Retro-go with th
 * [Game-and-watch-backup](https://github.com/ghidraninja/game-and-watch-backup)
 * [Game-and-watch-patch](https://github.com/BrianPugh/game-and-watch-patch)
 * [Game-and-watch-retro-go](https://github.com/sylverb/game-and-watch-retro-go)
+* [Game-and-watch-smw](https://github.com/marian-m12l/game-and-watch-smw)
 * [Game-and-watch-zelda3](https://github.com/marian-m12l/game-and-watch-zelda3)

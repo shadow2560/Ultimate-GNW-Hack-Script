@@ -57,3 +57,17 @@ else
     git clone --recurse-submodules https://github.com/marian-m12l/game-and-watch-zelda3.git ./../$folder
 fi
 cp -r ./resources/$folder/* ./../$folder/
+
+
+
+echo "--------------- game-and-watch-SMW ----------------------------------------------"
+folder=game-and-watch-smw
+#rm -r ./../$folder
+if [ -d "./../$folder" ]; then
+	cd ./../$folder
+	git pull --recurse-submodules
+	cd $S_DIR
+else
+    git clone --recurse-submodules https://github.com/marian-m12l/game-and-watch-smw.git ./../$folder
+fi
+cp -r ./resources/$folder/* ./../$folder/
