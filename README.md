@@ -16,6 +16,14 @@ If you have some problems first delete every folders around the script except th
 
 Please don't disable the "Clean build" param except if you know what you do, enabling this param is more secure.
 
+## Possible configurations before first launch or before repositories initialization/update
+
+You can put some important files to automaticaly copy them during initialization/update of the repositories. The base folder for taht is "_installer/resources", then for each repository you have some possible configs:
+* game-and-watch-backup/backups: Put your GnW dumps backups files "flash_backup_mario.bin", "internal_flash_backup_mario.bin", "itcm_backup_mario.bin", "flash_backup_zelda.bin", "internal_flash_backup_zelda.bin" and "itcm_backup_zelda.bin". If you don't have them you will need to make the backups manualy.
+* game-and-watch-patch: You can put the GnW backups their, "flash_backup_mario.bin", "internal_flash_backup_mario.bin", "flash_backup_zelda.bin" and "internal_flash_backup_zelda.bin". This is not very usful if you have already copied them to "game-and-watch-backup/backups" or if you have made the backups manualy because the script will copy them automaticaly if needed.
+* game-and-watch-smw/smw/assets: Put the US sfc rom of Super Mario World named "smw.sfc", required to build the project.
+* game-and-watch-zelda3/zelda3/tables: Put the US sfc rom of Zelda3 named "zelda3.sfc", required to build the project. You can also put others sfc roms to use others languages, for example for french you must put the french rom of Zelda3 named "zelda3_fr.sfc".
+
 ## First launch
 
 Execute the first, second and third choice in the main menu to install the environement. If you want to update the environement you can re-execute the second and third choice.

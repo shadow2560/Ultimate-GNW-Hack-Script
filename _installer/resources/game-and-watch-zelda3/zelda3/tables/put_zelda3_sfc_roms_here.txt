@@ -1,0 +1,1 @@
+Put Zelda3 US SFC rom named "zelda3.sfc", required whatever language you want to use. You can also put Zelda3 SFC roms for others languages, for example the french rom of Zelda3 named "zelda3_fr.sfc".
