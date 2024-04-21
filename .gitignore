@@ -1,6 +1,7 @@
 /_installer/.wget-hsts
 /_installer/resources/game-and-watch-backup/backups/*.bin
 /_installer/resources/game-and-watch-patch/*.bin
+/_installer/resources/game-and-watch-retro-go/roms
 /_installer/resources/game-and-watch-smw/smw/assets/*.sfc
 /_installer/resources/game-and-watch-zelda3/zelda3/tables/*.sfc
 /msys2
