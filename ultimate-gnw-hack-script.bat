@@ -58,6 +58,9 @@ set retrogo_cheats=0
 set retrogo_shared_hibernate_savestate=0
 set retrogo_splash_screen=0
 set retrogo_old_nes_emulator=0
+set retrogo_old_gb_emulator=0
+set retrogo_single_font=0
+set retrogo_filesystem_size=10
 
 SET zelda3_lng=us
 set zelda3_savestate=0
@@ -126,6 +129,9 @@ goto main
 	if %retrogo_shared_hibernate_savestate%==1 (echo Retrogo shared hibernate savestate: Enabled) else (echo Retrogo shared hibernate savestate: Disabled)
 	if %retrogo_splash_screen%==0 (echo Retrogo splash screen on boot: Enabled) else (echo Retrogo splash screen on boot: Disabled)
 	if %retrogo_old_nes_emulator%==1 (echo Retrogo use old NES emulator: Enabled) else (echo Retrogo use old NES emulator: Disabled)
+	if %retrogo_old_gb_emulator%==1 (echo Retrogo use old GB emulator ^(not used for now^): Enabled) else (echo Retrogo use old GB emulator ^(not used for now^): Disabled)
+	if %retrogo_single_font%==1 (echo Retrogo single font ^(not used for now^): Enabled) else (echo Retrogo single font ^(not used for now^): Disabled)
+	echo retrogo filesystem_size ^(not used for now^): %retrogo_filesystem_size%%%
 	echo.
 	echo Zelda3 and Super Mario World Settings:
 	echo.
@@ -241,6 +247,7 @@ goto backup_menu
 	echo 3. Set Storage Size
 	echo 4. Switch between Boot Types
 	echo 5. Toggle Clean Build
+	echo 6. Set Number Of Processor Used For Compilation
 	echo.
 	echo -------------------------------------
 	echo.
@@ -256,9 +263,10 @@ goto backup_menu
 	IF /I '%IN_S%'=='3' set val_s=1 & call :set_storage
 	IF /I '%IN_S%'=='4' set val_s=1 & call :toggle_TB
 	IF /I '%IN_S%'=='5' set val_s=1 & call :toggle_CB
+	IF /I '%IN_S%'=='6' set val_s=1 & call :set_proc_number
 	IF /I '%IN_S%'=='Q' goto eof
 	
-	if %val_s%==0	call :invald_input 1, 5
+	if %val_s%==0	call :invald_input 1, 6
 	
 	goto :settings
 
@@ -321,6 +329,39 @@ goto eof
 	call :invald_input 4, 512
 goto set_storage
 
+:set_proc_number
+	call :head
+	echo - [Setting Number Of Processors] ------------
+	echo.
+	SET VALUE=
+	echo Please input a number of processor^(s^), leave empty to cancel^)
+	SET /P VALUE=Value: 
+	IF /I '%VALUE%'=='' goto eof
+	call :strlen nb "%VALUE%"
+	set i=0
+	:check_chars_proc_value
+	IF %i% NEQ %nb% (
+		set check_chars=0
+		FOR %%z in (0 1 2 3 4 5 6 7 8 9) do (
+			IF "!VALUE:~%i%,1!"=="%%z" (
+				set /a i+=1
+				set check_chars=1
+				goto :check_chars_proc_value
+			)
+		)
+		IF "!check_chars!"=="0" (
+		echo Unauthorised char for proc number value.
+		pause
+		goto :set_proc_number
+		)
+	)
+	IF /I %VALUE% LSS 1 set proc_number=1 & goto eof
+	IF NOT "%NUMBER_OF_PROCESSORS%"=="" (
+		IF /I %VALUE% GTR %NUMBER_OF_PROCESSORS% set proc_number=%NUMBER_OF_PROCESSORS% & goto eof
+	)
+	set proc_number=%VALUE%
+	goto eof
+
 :retrogo_settings
 	call :head
 	echo - [Retrogo Settings Menu ] ------------------
@@ -332,7 +373,10 @@ goto set_storage
 	echo 5. Toggle Cheat Codes
 	echo 6. Toggle Shared Hibernate Savestate
 	echo 7. Toggle Splash Screen On Boot
-	echo 8. Toggle Usage Of The Old Nintendo Emulator
+	echo 8. Toggle Usage Of The Old NES Emulator
+	echo 9. Toggle Usage Of The Old Gameboy Emulator
+	echo 10. Toggle Usage Of Single Font
+	echo 11. Set Retrogo Filesystem Size
 	echo.
 	echo -------------------------------------
 	echo.
@@ -351,11 +395,61 @@ goto set_storage
 	IF /I '%IN_R%'=='6' set val_r=1 & call :toggle_retrogo_shared_hibernate_savestate
 	IF /I '%IN_R%'=='7' set val_r=1 & call :toggle_retrogo_splash_screen
 	IF /I '%IN_R%'=='8' set val_r=1 & call :toggle_retrogo_old_nes_emulator
+	IF /I '%IN_R%'=='9' set val_r=1 & call :toggle_retrogo_old_gb_emulator
+	IF /I '%IN_R%'=='10' set val_r=1 & call :toggle_retrogo_single_font
+	IF /I '%IN_R%'=='11' set val_r=1 & call :set_retrogo_filesystem_size
 	IF /I '%IN_R%'=='Q' goto eof
 	
-	if %val_r%==0	call :invald_input 1, 6
+	if %val_r%==0	call :invald_input 1, 11
 	
 	goto :retrogo_settings
+
+:set_retrogo_filesystem_size
+	call :head
+	echo - [Setting Retrogo Filesystem Size] ------------
+	echo.
+	SET VALUE=
+	echo Please input a size in %% for Retrogo filesystem ^(0 to 99, leave empty to cancel^)
+	SET /P VALUE=Value: 
+	IF /I '%VALUE%'=='' goto eof
+	call :strlen nb "%VALUE%"
+	set i=0
+	:check_chars_rfs_value
+	IF %i% NEQ %nb% (
+		set check_chars=0
+		FOR %%z in (0 1 2 3 4 5 6 7 8 9) do (
+			IF "!VALUE:~%i%,1!"=="%%z" (
+				set /a i+=1
+				set check_chars=1
+				goto :check_chars_rfs_value
+			)
+		)
+		IF "!check_chars!"=="0" (
+		echo Unauthorised char for filesystem size value.
+		pause
+		goto :set_retrogo_filesystem_size
+		)
+	)
+	IF /I %VALUE% LSS 0 set retrogo_filesystem_size=0 & goto eof
+	IF /I %VALUE% GTR 99 set retrogo_filesystem_size=99 & goto eof
+	set retrogo_filesystem_size=%VALUE%
+	goto eof
+
+:toggle_retrogo_old_gb_emulator
+	if %retrogo_old_gb_emulator%==1 (
+		set retrogo_old_gb_emulator=0
+	) else (
+		set retrogo_old_gb_emulator=1
+	)
+goto eof
+
+:toggle_retrogo_single_font
+	if %retrogo_single_font%==1 (
+		set retrogo_single_font=0
+	) else (
+		set retrogo_single_font=1
+	)
+goto eof
 
 :toggle_retrogo_savestate
 	if %retrogo_savestate%==1 (
@@ -524,7 +618,7 @@ goto eof
 	cd game-and-watch-retro-go
 	call _make_links.cmd
 	cd ..
-	call :run_mingw64 ./game-and-watch-retro-go/, "build.sh %adapter% %system% %storage_meg% %boot_type% %clean_build% %proc_number% %retrogo_savestate% %retrogo_lng% %retrogo_coverflows% %retrogo_screenshots% %retrogo_cheats% %retrogo_shared_hibernate_savestate% %retrogo_splash_screen% %retrogo_old_nes_emulator%"
+	call :run_mingw64 ./game-and-watch-retro-go/, "build.sh %adapter% %system% %storage_meg% %boot_type% %clean_build% %proc_number% %retrogo_savestate% %retrogo_lng% %retrogo_coverflows% %retrogo_screenshots% %retrogo_cheats% %retrogo_shared_hibernate_savestate% %retrogo_splash_screen% %retrogo_old_nes_emulator% %retrogo_old_gb_emulator% %retrogo_single_font% %retrogo_filesystem_size%"
 	cd game-and-watch-retro-go
 	call _remove_links.cmd
 	cd ..
@@ -595,5 +689,17 @@ goto eof
 	goto wait
 :wait_end
 goto eof
+
+:strlen
+	set "string=%~2"
+	set stringLength=0
+	IF "%string%"=="" goto:end_lengthLoop
+	:lengthLoop
+		set "string=%string:~1%"
+		set /a stringLength +=1
+		if defined string goto:lengthLoop
+	:end_lengthLoop
+	set %~1=%stringLength%
+	goto:eof
 
 :eof
