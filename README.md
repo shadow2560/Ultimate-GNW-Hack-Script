@@ -26,7 +26,7 @@ You can put some important files to automaticaly copy them during initialization
 
 ## First launch
 
-Execute the first, second and third choice in the main menu to install the environement. If you want to update the environement you can re-execute the second and third choice.
+Execute the first, second and third choice in the main menu to install the environement. If you want to update the environement you can re-execute the second and third choice. If you want only update the repositories used you only need to execute the third choice.
 
 ## Typical use
 
@@ -36,7 +36,7 @@ The backups are not unic for each console, only for each model so if you've alre
 
 After this you will need to unlock the device (if you want to change the memory in the Game-and-Watch don't do it before unlocking it), this is the choice "4" in the GnW-Backup menu.
 
-After this and eventualy after changing the memory of the Game-and-Watch you can flash what you want, if you want to have a dual boot with the original firmware and Retro-go ("Boot type" param is set by default for this configuration) you need to flash GnW-Patch (don't forget to put the backup files of the model you want to flash in the "game-and-watch-patch" folder) and the flash Retro-go, if you only want Retro-go you will only need to flash it with the single boot set for the "Boot type" param.
+After this and eventualy after changing the memory of the Game-and-Watch you can flash what you want, if you want to have a dual boot with the original firmware and Retro-go ("Boot type" param is set by default for this configuration) you need to flash GnW-Patch (don't forget to put the backup files of the model you want to flash in the "game-and-watch-patch" folder) and the flash Retro-go, if you only want Retro-go you will only need to flash it with the single boot set for the "Boot type" param. Now it's the two boot type that are recommanded, the others are kept for specifics uses but now you can integrate Zelda3 and Super Mario World directly in Retro-go witch is far better than doing a triple boot or making a dual boot with only one of the two games except if you have limited memory, in this case you may want to have only the game that you want on dual boot or single boot.
 
 Note: With the explained dual boot configuration you can launch Retro-go with the shortcut "Game+left" on the original firmware.
 
