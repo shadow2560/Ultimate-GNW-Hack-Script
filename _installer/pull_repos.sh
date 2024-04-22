@@ -49,10 +49,12 @@ if [ -d "./../$folder" ]; then
 	# git submodule update --init --recursive --remote --force
 	cd $S_DIR
 else
-	git clone --recurse-submodules https://github.com/sylverb/game-and-watch-retro-go.git ./../$folder
+	git clone --recurse-submodules https://github.com/shadow2560/game-and-watch-retro-go.git ./../$folder
+	# git clone --recurse-submodules -b filesystem --single-branch https://github.com/shadow2560/game-and-watch-retro-go.git ./../$folder
+	# git clone --recurse-submodules https://github.com/sylverb/game-and-watch-retro-go.git ./../$folder
+	# git clone --recurse-submodules -b filesystem --single-branch https://github.com/sylverb/game-and-watch-retro-go.git ./../$folder
 	 # git clone --recurse-submodules https://github.com/marian-m12l/game-and-watch-retro-go.git ./../$folder
 	# git clone --recurse-submodules https://github.com/BenjaminSoelberg/game-and-watch-retro-go.git ./../$folder
-	# git clone --recurse-submodules -b filesystem --single-branch https://github.com/sylverb/game-and-watch-retro-go.git ./../$folder
 	# cd ./../$folder
 	# git submodule update --init --recursive --remote --force
 	# cd $S_DIR
@@ -77,7 +79,7 @@ else
 fi
 cp -r ./resources/$folder/* ./../$folder/
 
-
+echo ""
 
 echo "--------------- game-and-watch-SMW ----------------------------------------------"
 folder=game-and-watch-smw
