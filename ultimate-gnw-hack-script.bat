@@ -52,7 +52,7 @@ if not "%NUMBER_OF_PROCESSORS%"=="" set proc_number=%NUMBER_OF_PROCESSORS%
 
 set retrogo_savestate=1
 set retrogo_lng=1252
-set retrogo_coverflows=1
+set retrogo_coverflows=0
 set retrogo_screenshots=0
 set retrogo_cheats=0
 set retrogo_shared_hibernate_savestate=0
