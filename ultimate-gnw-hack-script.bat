@@ -215,6 +215,7 @@ goto main
 	echo 3. Backup Int-Flash
 	echo 4. Unlock Device
 	echo 5. Restore Device ^(need Backup files in "game-and-watch-backup\backups" folder^)
+	echo 6. Unlock device with Gnwmanager ^(Beta, perform steps 1 to 5 automaticaly without needed to indicate proper model in settings^)
 	echo -------------------------------------
 	echo.
 	echo S. General Settings Menu
@@ -230,11 +231,12 @@ goto main
 	IF /I '%IN_B%'=='3' set val_b=1 & call :run_mingw64 ./game-and-watch-backup/, "3_backup_internal_flash.sh %adapter% %system%"
 	IF /I '%IN_B%'=='4' set val_b=1 & call :run_mingw64 ./game-and-watch-backup/, "4_unlock_device.sh %adapter% %system%"
 	IF /I '%IN_B%'=='5' set val_b=1 & call :run_mingw64 ./game-and-watch-backup/, "5_restore.sh %adapter% %system%"
+	IF /I '%IN_B%'=='6' set val_b=1 & call :run_mingw64 ./_installer/, "unlock_gnw.sh"
 	IF /I '%IN_B%'=='S' set val_b=1 & call :settings
 	IF /I '%IN_B%'=='Q' goto eof
 	IF /I '%IN_B%'=='' set val_b=1
 	
-	if %val_b%==0	call :invald_input 1, 5
+	if %val_b%==0	call :invald_input 1, 6
 	
 goto backup_menu
 
@@ -587,7 +589,9 @@ goto eof
 :run_mingw64
 	mkdir _tmp
 	echo cd %~1 > _tmp\launch.sh
-	echo export GCC_PATH="%base_script_slash_path%gcc-arm-none-eabi-10.3-2021.10/bin/" >> _tmp\launch.sh
+	::echo export GCC_PATH="%base_script_slash_path%gcc-arm-none-eabi-10.3-2021.10/bin/" >> _tmp\launch.sh
+	echo export GCC_PATH="%base_script_slash_path%arm-gnu-toolchain-13.2.Rel1-mingw-w64-i686-arm-none-eabi/bin/" >> _tmp\launch.sh
+	::echo export GCC_PATH="%base_script_slash_path%msys2/mingw64/bin/" >> _tmp\launch.sh
 	echo ./%~2 >> _tmp\launch.sh
 	echo read -p ^"Press enter to continue^" >> _tmp\launch.sh
 	"%mingw64_path%" ./_tmp/launch.sh
