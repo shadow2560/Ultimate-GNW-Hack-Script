@@ -149,9 +149,10 @@ goto eof
 	echo 3. Init/Update Repos
 	echo 4. GnW-Backup Menu
 	echo 5. Flash GnW-Patch ^(needs Backup files in "game-and-watch-patch" folder^)
-	echo 6. Flash GnW-Retro-Go
-	echo 7. Flash GnW-Zelda3
-	echo 8. Flash GnW-Super-Mario-World
+	echo 6. Flash GnW-Patch ^(old method, needs Backup files in "game-and-watch-patch-old_method" folder^)
+	echo 7. Flash GnW-Retro-Go
+	echo 8. Flash GnW-Zelda3
+	echo 9. Flash GnW-Super-Mario-World
 	echo.
 	echo -------------------------------------
 	echo.
@@ -194,16 +195,17 @@ goto eof
 	IF /I '%IN_M%'=='3' set val_m=1 & call :run_mingw64 _installer/ , pull_repos.sh
 	IF /I '%IN_M%'=='4' set val_m=1 & call :backup_menu
 	IF /I '%IN_M%'=='5' set val_m=1 & call :run_patch
-	IF /I '%IN_M%'=='6' set val_m=1 & call :run_retrogo
-	IF /I '%IN_M%'=='7' set val_m=1 & call :run_zelda3
-	IF /I '%IN_M%'=='8' set val_m=1 & call :run_smw
+	IF /I '%IN_M%'=='6' set val_m=1 & call :run_patch_old
+	IF /I '%IN_M%'=='7' set val_m=1 & call :run_retrogo
+	IF /I '%IN_M%'=='8' set val_m=1 & call :run_zelda3
+	IF /I '%IN_M%'=='9' set val_m=1 & call :run_smw
 	IF /I '%IN_M%'=='S' set val_m=1 & call :settings
 	IF /I '%IN_M%'=='R' set val_m=1 & call :retrogo_settings
 	IF /I '%IN_M%'=='Z' set val_m=1 & call :zelda3_settings
 	IF /I '%IN_M%'=='Q' set val_m=1 & GOTO eof
 	IF /I '%IN_M%'=='' set val_m=1
 
-	if %val_m%==0 call :invald_input 1, 8
+	if %val_m%==0 call :invald_input 1, 9
 goto main
 
 :backup_menu
@@ -673,13 +675,51 @@ goto eof
 	)
 	set run_p=1
 	if NOT exist .\game-and-watch-patch\flash_backup_%system%.bin (
+		if exist .\game-and-watch-patch-old_method\flash_backup_%system%.bin ( copy .\game-and-watch-patch-old_method\flash_backup_%system%.bin .\game-and-watch-patch\ 1>NUL)
+	)
+	if NOT exist .\game-and-watch-patch\flash_backup_%system%.bin (
 		if exist .\game-and-watch-backup\backups\flash_backup_%system%.bin ( copy .\game-and-watch-backup\backups\flash_backup_%system%.bin .\game-and-watch-patch\ 1>NUL ) else (set run_p=0)
+	)
+	if NOT exist .\game-and-watch-patch\internal_flash_backup_%system%.bin (
+		if exist .\game-and-watch-patch-old_method\internal_flash_backup_%system%.bin ( copy .\game-and-watch-patch-old_method\internal_flash_backup_%system%.bin .\game-and-watch-patch\ 1>NUL)
 	)
 	if NOT exist .\game-and-watch-patch\internal_flash_backup_%system%.bin (
 		if exist .\game-and-watch-backup\backups\internal_flash_backup_%system%.bin ( copy .\game-and-watch-backup\backups\internal_flash_backup_%system%.bin .\game-and-watch-patch\ 1>NUL ) else (set run_p=0)
 	)
 	if %run_p%==1 (
 		call :run_mingw64 ./game-and-watch-patch/, "build.sh %adapter% %system% %storage_meg% %boot_type% %clean_build%"
+	) else (
+		echo "Missing Backup-Files in game-and-watch-backup."
+		pause
+	)
+goto eof
+
+:run_patch_old
+	if %boot_type%==0 (
+		echo Not possible to use this function in single mode boot.
+		pause
+		goto eof
+	)
+	if %boot_type%==2 (
+		echo Not possible to use this function in dual boot Retrogo + Zelda3 or Super Mario World.
+		pause
+		goto eof
+	)
+	set run_p=1
+	if NOT exist .\game-and-watch-patch-old_method\flash_backup_%system%.bin (
+		if exist .\game-and-watch-patch\flash_backup_%system%.bin ( copy .\game-and-watch-patch\flash_backup_%system%.bin .\game-and-watch-patch-old_method\ 1>NUL)
+	)
+	if NOT exist .\game-and-watch-patch-old_method\flash_backup_%system%.bin (
+		if exist .\game-and-watch-backup\backups\flash_backup_%system%.bin ( copy .\game-and-watch-backup\backups\flash_backup_%system%.bin .\game-and-watch-patch-old_method\ 1>NUL ) else (set run_p=0)
+	)
+	if NOT exist .\game-and-watch-patch-old_method\internal_flash_backup_%system%.bin (
+		if exist .\game-and-watch-patch\internal_flash_backup_%system%.bin ( copy .\game-and-watch-patch\internal_flash_backup_%system%.bin .\game-and-watch-patch-old_method\ 1>NUL)
+	)
+	if NOT exist .\game-and-watch-patch-old_method\internal_flash_backup_%system%.bin (
+		if exist .\game-and-watch-backup\backups\internal_flash_backup_%system%.bin ( copy .\game-and-watch-backup\backups\internal_flash_backup_%system%.bin .\game-and-watch-patch-old_method\ 1>NUL ) else (set run_p=0)
+	)
+	if %run_p%==1 (
+		call :run_mingw64 ./game-and-watch-patch-old_method/, "build.sh %adapter% %system% %storage_meg% %boot_type% %clean_build%"
 	) else (
 		echo "Missing Backup-Files in game-and-watch-backup."
 		pause

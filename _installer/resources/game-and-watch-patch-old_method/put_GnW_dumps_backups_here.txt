@@ -1,0 +1,1 @@
+Put your backups dumps of the GnW here ("flash_backup_mario.bin", "internal_flash_backup_mario.bin", "flash_backup_zelda.bin" and "internal_flash_backup_zelda.bin").

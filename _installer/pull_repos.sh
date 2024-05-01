@@ -31,7 +31,25 @@ if [ -d "./../$folder" ]; then
 	# git submodule update --init --recursive --remote --force
 	cd $S_DIR
 else
-    git clone --recurse-submodules https://github.com/BrianPugh/game-and-watch-patch.git ./../$folder
+	git clone --recurse-submodules https://github.com/BrianPugh/game-and-watch-patch.git ./../$folder
+	# cd ./../$folder
+	# git submodule update --init --recursive --remote --force
+	# cd $S_DIR
+fi
+cp -r ./resources/$folder/* ./../$folder/
+
+echo ""
+
+echo "--------------- game-and-watch-patch-old_method -----------------------------------------------"
+folder=game-and-watch-patch-old_method
+#rm -r ./../$folder
+if [ -d "./../$folder" ]; then
+	cd ./../$folder
+	git pull --recurse-submodules
+	# git submodule update --init --recursive --remote --force
+	cd $S_DIR
+else
+	git clone --recurse-submodules -b old_method --single-branch https://github.com/shadow2560/game-and-watch-patch.git ./../$folder
 	# cd ./../$folder
 	# git submodule update --init --recursive --remote --force
 	# cd $S_DIR
@@ -49,8 +67,9 @@ if [ -d "./../$folder" ]; then
 	# git submodule update --init --recursive --remote --force
 	cd $S_DIR
 else
-	git clone --recurse-submodules https://github.com/shadow2560/game-and-watch-retro-go.git ./../$folder
+	# git clone --recurse-submodules https://github.com/shadow2560/game-and-watch-retro-go.git ./../$folder
 	# git clone --recurse-submodules -b filesystem --single-branch https://github.com/shadow2560/game-and-watch-retro-go.git ./../$folder
+	git clone --recurse-submodules -b filesystem_wip --single-branch https://github.com/shadow2560/game-and-watch-retro-go.git ./../$folder
 	# git clone --recurse-submodules https://github.com/sylverb/game-and-watch-retro-go.git ./../$folder
 	# git clone --recurse-submodules -b filesystem --single-branch https://github.com/sylverb/game-and-watch-retro-go.git ./../$folder
 	 # git clone --recurse-submodules https://github.com/marian-m12l/game-and-watch-retro-go.git ./../$folder
