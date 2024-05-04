@@ -47,6 +47,7 @@ set storage_meg=64
 set adapter=stlink
 set boot_type=1
 set clean_build=1
+set force_pyocd=1
 set proc_number=1
 if not "%NUMBER_OF_PROCESSORS%"=="" set proc_number=%NUMBER_OF_PROCESSORS%
 
@@ -93,6 +94,7 @@ goto main
 		echo Boot type: Single boot
 	)
 	if %clean_build%==1 (echo Clean Build: Enabled) else (echo Clean Build: Disabled)
+	if %force_pyocd%==1 (echo Force Pyocd for Gnwmanager: Enabled) else (echo Force Pyocd for Gnwmanager: Disabled)
 	echo Adapter: %adapter%
 	echo.
 	echo Retrogo Settings:
@@ -129,9 +131,9 @@ goto main
 	if %retrogo_shared_hibernate_savestate%==1 (echo Retrogo shared hibernate savestate: Enabled) else (echo Retrogo shared hibernate savestate: Disabled)
 	if %retrogo_splash_screen%==0 (echo Retrogo splash screen on boot: Enabled) else (echo Retrogo splash screen on boot: Disabled)
 	if %retrogo_old_nes_emulator%==1 (echo Retrogo use old NES emulator: Enabled) else (echo Retrogo use old NES emulator: Disabled)
-	if %retrogo_old_gb_emulator%==1 (echo Retrogo use old GB emulator ^(not used for now^): Enabled) else (echo Retrogo use old GB emulator ^(not used for now^): Disabled)
-	if %retrogo_single_font%==1 (echo Retrogo single font ^(not used for now^): Enabled) else (echo Retrogo single font ^(not used for now^): Disabled)
-	echo retrogo filesystem_size ^(not used for now^): %retrogo_filesystem_size%%%
+	if %retrogo_old_gb_emulator%==1 (echo Retrogo use old GB emulator: Enabled) else (echo Retrogo use old GB emulator: Disabled)
+	if %retrogo_single_font%==1 (echo Retrogo single font: Enabled) else (echo Retrogo single font: Disabled)
+	echo retrogo filesystem_size: %retrogo_filesystem_size%%%
 	echo.
 	echo Zelda3 and Super Mario World Settings:
 	echo.
@@ -204,7 +206,6 @@ goto eof
 	IF /I '%IN_M%'=='Z' set val_m=1 & call :zelda3_settings
 	IF /I '%IN_M%'=='Q' set val_m=1 & GOTO eof
 	IF /I '%IN_M%'=='' set val_m=1
-
 	if %val_m%==0 call :invald_input 1, 9
 goto main
 
@@ -237,9 +238,7 @@ goto main
 	IF /I '%IN_B%'=='S' set val_b=1 & call :settings
 	IF /I '%IN_B%'=='Q' goto eof
 	IF /I '%IN_B%'=='' set val_b=1
-	
 	if %val_b%==0	call :invald_input 1, 6
-	
 goto backup_menu
 
 :settings
@@ -252,6 +251,7 @@ goto backup_menu
 	echo 4. Switch between Boot Types
 	echo 5. Toggle Clean Build
 	echo 6. Set Number Of Processor Used For Compilation
+	echo 7. Toggle use of Pyocd for Gnwmanager
 	echo.
 	echo -------------------------------------
 	echo.
@@ -268,11 +268,10 @@ goto backup_menu
 	IF /I '%IN_S%'=='4' set val_s=1 & call :toggle_TB
 	IF /I '%IN_S%'=='5' set val_s=1 & call :toggle_CB
 	IF /I '%IN_S%'=='6' set val_s=1 & call :set_proc_number
+	IF /I '%IN_S%'=='7' set val_s=1 & call :toggle_pyocd
 	IF /I '%IN_S%'=='Q' goto eof
-	
-	if %val_s%==0	call :invald_input 1, 6
-	
-	goto :settings
+	if %val_s%==0	call :invald_input 1, 7
+	goto settings
 
 :toggle_TB
 	if %boot_type%==0 (
@@ -291,6 +290,14 @@ goto eof
 		set clean_build=0
 	) else (
 		set clean_build=1
+	)
+goto eof
+
+:toggle_CB
+	if %force_pyocd%==1 (
+		set force_pyocd=0
+	) else (
+		set force_pyocd=1
 	)
 goto eof
 
@@ -403,10 +410,8 @@ goto set_storage
 	IF /I '%IN_R%'=='10' set val_r=1 & call :toggle_retrogo_single_font
 	IF /I '%IN_R%'=='11' set val_r=1 & call :set_retrogo_filesystem_size
 	IF /I '%IN_R%'=='Q' goto eof
-	
 	if %val_r%==0	call :invald_input 1, 11
-	
-	goto :retrogo_settings
+	goto retrogo_settings
 
 :set_retrogo_filesystem_size
 	call :head
@@ -566,10 +571,8 @@ goto eof
 	IF /I '%IN_Z%'=='1' set val_z=1 & call :set_zelda3_lng
 	IF /I '%IN_Z%'=='2' set val_z=1 & call :toggle_zelda3_savestate
 	IF /I '%IN_Z%'=='Q' goto eof
-	
 	if %val_z%==0	call :invald_input 1, 6
-	
-	goto :zelda3_settings
+	goto zelda3_settings
 
 :set_zelda3_lng
 	call :head
@@ -614,7 +617,7 @@ goto eof
 
 
 :install_env
-	call :run_mingw64 _installer/ , msys2_install.sh
+	call :run_mingw64 _installer/, msys2_install.sh
 	if exist _installer\run_again.txt (
 		goto install_env
 	)
@@ -624,7 +627,7 @@ goto eof
 	cd game-and-watch-retro-go
 	call _make_links.cmd "%base_script_path%"
 	cd ..
-	call :run_mingw64 ./game-and-watch-retro-go/, "build.sh %adapter% %system% %storage_meg% %boot_type% %clean_build% %proc_number% %retrogo_savestate% %retrogo_lng% %retrogo_coverflows% %retrogo_screenshots% %retrogo_cheats% %retrogo_shared_hibernate_savestate% %retrogo_splash_screen% %retrogo_old_nes_emulator% %retrogo_old_gb_emulator% %retrogo_single_font% %retrogo_filesystem_size%"
+	call :run_mingw64 ./game-and-watch-retro-go/, "build.sh %adapter% %system% %storage_meg% %boot_type% %clean_build% %proc_number% %retrogo_savestate% %retrogo_lng% %retrogo_coverflows% %retrogo_screenshots% %retrogo_cheats% %retrogo_shared_hibernate_savestate% %retrogo_splash_screen% %retrogo_old_nes_emulator% %retrogo_old_gb_emulator% %retrogo_single_font% %retrogo_filesystem_size% %force_pyocd% %base_script_slash_path%_installer/python/scripts/gnwmanager.exe"
 	cd game-and-watch-retro-go
 	call _remove_links.cmd
 	cd ..
@@ -687,7 +690,7 @@ goto eof
 		if exist .\game-and-watch-backup\backups\internal_flash_backup_%system%.bin ( copy .\game-and-watch-backup\backups\internal_flash_backup_%system%.bin .\game-and-watch-patch\ 1>NUL ) else (set run_p=0)
 	)
 	if %run_p%==1 (
-		call :run_mingw64 ./game-and-watch-patch/, "build.sh %adapter% %system% %storage_meg% %boot_type% %clean_build%"
+		call :run_mingw64 ./game-and-watch-patch/, "build.sh %adapter% %system% %storage_meg% %boot_type% %clean_build% %force_pyocd% %base_script_slash_path%_installer/python/scripts/gnwmanager.exe"
 	) else (
 		echo "Missing Backup-Files in game-and-watch-backup."
 		pause
@@ -744,6 +747,6 @@ goto eof
 		if defined string goto:lengthLoop
 	:end_lengthLoop
 	set %~1=%stringLength%
-	goto:eof
+	goto eof
 
 :eof

@@ -31,7 +31,8 @@ if [ -d "./../$folder" ]; then
 	# git submodule update --init --recursive --remote --force
 	cd $S_DIR
 else
-	git clone --recurse-submodules https://github.com/BrianPugh/game-and-watch-patch.git ./../$folder
+	# git clone --recurse-submodules https://github.com/BrianPugh/game-and-watch-patch.git ./../$folder
+	git clone --recurse-submodules https://github.com/shadow2560/game-and-watch-patch.git ./../$folder
 	# cd ./../$folder
 	# git submodule update --init --recursive --remote --force
 	# cd $S_DIR
