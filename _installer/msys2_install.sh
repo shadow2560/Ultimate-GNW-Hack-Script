@@ -10,12 +10,12 @@ pacman -S mingw-w64-x86_64-openocd --noconfirm --needed
 pacman -S mingw-w64-x86_64-SDL2 --noconfirm --needed
 pacman -S wget unzip --noconfirm --needed
 
-# pacman -S mingw-w64-x86_64-rust cmake mingw-w64-x86_64-python-capstone mingw-w64-x86_64-cargo-c
+# pacman -S mingw-w64-x86_64-rust cmake mingw-w64-x86_64-python-capstone mingw-w64-x86_64-cargo-c mingw-w64-x86_64-cmake mingw-w64-x86_64-emacs mingw-w64-x86_64-make
 
 SETUPTOOLS_USE_DISTUTILS=stdlib pip install --upgrade gnwmanager
 
 # pip install cmsis-pack-manager
-# SETUPTOOLS_USE_DISTUTILS=stdlib pip install --use-pep517 pyocd
+# SETUPTOOLS_USE_DISTUTILS=stdlib CMAKE_C_COMPILER=gcc CMAKE_CXX_COMPILER=g++ CMAKE_EXE_LINKER_FLAGS="-Wl,--allow-multiple-definition" pip install --use-pep517 pyocd
 # gnwmanager install openocd
 # SETUPTOOLS_USE_DISTUTILS=stdlib pip install --upgrade gnwmanager --no-binary :all:
 
@@ -24,11 +24,16 @@ SETUPTOOLS_USE_DISTUTILS=stdlib pip install --upgrade gnwmanager
 # unzip -o gcc-arm-none-eabi-13.2.zip -d ../
 # rm gcc-arm-none-eabi-13.2.zip
 
-rm -r -f ../gcc-arm-none-eabi-10.3-2021.10
-wget "https://developer.arm.com/-/media/Files/downloads/gnu-rm/10.3-2021.10/gcc-arm-none-eabi-10.3-2021.10-win32.zip?rev=8f4a92e2ec2040f89912f372a55d8cf3&hash=5569B4C322E49BB400BFB63567A4B33B" -O gcc-arm-none-eabi-10.3-2021.10-win32.zip
+rm -r -f ./python
+wget https://aka.ms/nugetclidl -O nuget.exe
+./nuget.exe install python -ExcludeVersion -OutputDirectory .
+./python/tools/python.exe -m pip install --no-warn-script-location pyocd gnwmanager
+
+# rm -r -f ../gcc-arm-none-eabi-10.3-2021.10
+# wget "https://developer.arm.com/-/media/Files/downloads/gnu-rm/10.3-2021.10/gcc-arm-none-eabi-10.3-2021.10-win32.zip?rev=8f4a92e2ec2040f89912f372a55d8cf3&hash=5569B4C322E49BB400BFB63567A4B33B" -O gcc-arm-none-eabi-10.3-2021.10-win32.zip
 # wget "https://armkeil.blob.core.windows.net/developer/Files/downloads/gnu-rm/10.3-2021.10/gcc-arm-none-eabi-10.3-2021.10-win32.zip" -o gcc-arm-none-eabi-10.3-2021.10-win32.zip
-unzip -o gcc-arm-none-eabi-10.3-2021.10-win32.zip -d ../
-rm gcc-arm-none-eabi-10.3-2021.10-win32.zip
+# unzip -o gcc-arm-none-eabi-10.3-2021.10-win32.zip -d ../
+# rm gcc-arm-none-eabi-10.3-2021.10-win32.zip
 
 rm /mingw64/bin/openocd.exe
 cp ./resources/openocd.exe /mingw64/bin/openocd.exe

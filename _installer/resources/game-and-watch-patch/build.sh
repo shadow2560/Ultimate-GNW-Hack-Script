@@ -14,11 +14,11 @@ if [ ! -z "$run" ]; then
 	if [ $5 -ge 1 ]; then make clean; fi
 	if [ $4 -ge 3 ]; then triple_boot=--triple-boot; else triple_boot=; fi
 	if [ $3 -eq 4 ]; then #boot 4MB
-		echo make PATCH_PARAMS="--device="$2" --no-la --no-sleep-images "$triple_boot"" LARGE_FLASH=$LARGE_FLASH ADAPTER=$1 FORCE_PYOCD=$6 GNWMANAGER_PATH=$7 flash
-		make PATCH_PARAMS="--device="$2" --no-la --no-sleep-images "$triple_boot"" LARGE_FLASH=$LARGE_FLASH ADAPTER=$1 FORCE_PYOCD=$6 GNWMANAGER_PATH=$7 flash
+		echo make PATCH_PARAMS="--device="$2" --no-la --no-sleep-images "$triple_boot"" LARGE_FLASH=$LARGE_FLASH ADAPTER=$1 FORCE_PYOCD=$6 GNWMANAGER_PATH="$7" flash
+		make PATCH_PARAMS="--device="$2" --no-la --no-sleep-images "$triple_boot"" LARGE_FLASH=$LARGE_FLASH ADAPTER=$1 FORCE_PYOCD=$6 GNWMANAGER_PATH="$7" flash
 	else
-		echo make PATCH_PARAMS=\"--device=$2 $triple_boot\" LARGE_FLASH=$LARGE_FLASH ADAPTER=$1 FORCE_PYOCD=$6 GNWMANAGER_PATH=$7 flash
-		make PATCH_PARAMS="--device="$2" "$triple_boot"" LARGE_FLASH=$LARGE_FLASH ADAPTER=$1 FORCE_PYOCD=$6 GNWMANAGER_PATH=$7 flash
+		echo make PATCH_PARAMS=\"--device=$2 $triple_boot\" LARGE_FLASH=$LARGE_FLASH ADAPTER=$1 FORCE_PYOCD=$6 GNWMANAGER_PATH="$7" flash
+		make PATCH_PARAMS="--device="$2" "$triple_boot"" LARGE_FLASH=$LARGE_FLASH ADAPTER=$1 FORCE_PYOCD=$6 GNWMANAGER_PATH="$7" flash
 	fi
 else
 	echo "missing parameters. Run with ./build.sh [pico|stlink] [mario|zelda] [4 ... 512]"

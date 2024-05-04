@@ -1,4 +1,6 @@
 /_installer/.wget-hsts
+/_installer/python
+/_installer/nuget.exe
 /_installer/resources/game-and-watch-backup/backups/*.bin
 /_installer/resources/game-and-watch-patch/*.bin
 /_installer/resources/game-and-watch-patch-old_method/*.bin

@@ -69,6 +69,7 @@ set zelda3_savestate=0
 set base_script_path=%~dp0
 set base_script_slash_path=%base_script_path:\=/%
 set mingw64_path=%base_script_path%\msys2\mingw64.exe
+set gnwmanager_path=%base_script_slash_path%_installer/python/tools/scripts/gnwmanager.exe
 
 goto main
 
@@ -627,7 +628,7 @@ goto eof
 	cd game-and-watch-retro-go
 	call _make_links.cmd "%base_script_path%"
 	cd ..
-	call :run_mingw64 ./game-and-watch-retro-go/, "build.sh %adapter% %system% %storage_meg% %boot_type% %clean_build% %proc_number% %retrogo_savestate% %retrogo_lng% %retrogo_coverflows% %retrogo_screenshots% %retrogo_cheats% %retrogo_shared_hibernate_savestate% %retrogo_splash_screen% %retrogo_old_nes_emulator% %retrogo_old_gb_emulator% %retrogo_single_font% %retrogo_filesystem_size% %force_pyocd% %base_script_slash_path%_installer/python/scripts/gnwmanager.exe"
+	call :run_mingw64 ./game-and-watch-retro-go/, "build.sh %adapter% %system% %storage_meg% %boot_type% %clean_build% %proc_number% %retrogo_savestate% %retrogo_lng% %retrogo_coverflows% %retrogo_screenshots% %retrogo_cheats% %retrogo_shared_hibernate_savestate% %retrogo_splash_screen% %retrogo_old_nes_emulator% %retrogo_old_gb_emulator% %retrogo_single_font% %retrogo_filesystem_size% %force_pyocd% %gnwmanager_path%"
 	cd game-and-watch-retro-go
 	call _remove_links.cmd
 	cd ..
@@ -690,7 +691,7 @@ goto eof
 		if exist .\game-and-watch-backup\backups\internal_flash_backup_%system%.bin ( copy .\game-and-watch-backup\backups\internal_flash_backup_%system%.bin .\game-and-watch-patch\ 1>NUL ) else (set run_p=0)
 	)
 	if %run_p%==1 (
-		call :run_mingw64 ./game-and-watch-patch/, "build.sh %adapter% %system% %storage_meg% %boot_type% %clean_build% %force_pyocd% %base_script_slash_path%_installer/python/scripts/gnwmanager.exe"
+		call :run_mingw64 ./game-and-watch-patch/, "build.sh %adapter% %system% %storage_meg% %boot_type% %clean_build% %force_pyocd% %gnwmanager_path%"
 	) else (
 		echo "Missing Backup-Files in game-and-watch-backup."
 		pause
