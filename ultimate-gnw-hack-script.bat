@@ -71,6 +71,8 @@ set base_script_slash_path=%base_script_path:\=/%
 set mingw64_path=%base_script_path%\msys2\mingw64.exe
 set gnwmanager_path=%base_script_slash_path%_installer/python/tools/scripts/gnwmanager.exe
 
+IF EXIST params.bat call params.bat
+
 goto main
 
 :head
