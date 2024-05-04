@@ -63,7 +63,7 @@ set retrogo_old_gb_emulator=0
 set retrogo_single_font=0
 set retrogo_filesystem_size=10
 
-SET zelda3_lng=us
+set zelda3_lng=us
 set zelda3_savestate=0
 
 set base_script_path=%~dp0
@@ -752,4 +752,29 @@ goto eof
 	set %~1=%stringLength%
 	goto eof
 
+:record_params
+echo set "system=%system%">params.bat
+echo set "storage_meg=%storage_meg%">>params.bat
+echo set "adapter=%adapter%">>params.bat
+echo "set boot_type=%boot_type%">>params.bat
+echo set "clean_build=%clean_build%">>params.bat
+echo set "force_pyocd=%force_pyocd%">>params.bat
+echo set "retrogo_savestate=%retrogo_savestate%">>params.bat
+echo set "retrogo_lng=%retrogo_lng%">>params.bat
+echo set "retrogo_coverflows=%retrogo_coverflows%">>params.bat
+echo set "retrogo_screenshots=%retrogo_screenshots%">>params.bat
+echo set "retrogo_cheats=%retrogo_cheats%">>params.bat
+echo set "retrogo_shared_hibernate_savestate=%retrogo_shared_hibernate_savestate%">>params.bat
+echo set "retrogo_splash_screen=%retrogo_splash_screen%">>params.bat
+echo set "retrogo_old_nes_emulator=%retrogo_old_nes_emulator%">>params.bat
+echo set "retrogo_old_gb_emulator=%retrogo_old_gb_emulator%">>params.bat
+echo set "retrogo_single_font=%retrogo_single_font%">>params.bat
+echo set "retrogo_filesystem_size=%retrogo_filesystem_size%">>params.bat
+echo set "zelda3_lng=%zelda3_lng%">>params.bat
+echo set "zelda3_savestate=%zelda3_savestate%">>params.bat
+goto eof2
+
 :eof
+call :record_params
+
+:eof2
