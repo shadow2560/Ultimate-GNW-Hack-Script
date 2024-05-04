@@ -164,6 +164,7 @@ goto eof
 	echo S. General Settings Menu
 	echo R. Retrogo Settings Menu
 	echo Z. Zelda3 and Super Mario World Settings Menu
+	echo D. Restore params to default ^(will also exit the script^)
 	echo Q. Quit
 	echo.
 	echo -------------------------------------
@@ -207,6 +208,7 @@ goto eof
 	IF /I '%IN_M%'=='S' set val_m=1 & call :settings
 	IF /I '%IN_M%'=='R' set val_m=1 & call :retrogo_settings
 	IF /I '%IN_M%'=='Z' set val_m=1 & call :zelda3_settings
+	IF /I '%IN_M%'=='D' set val_m=1 & IF EXIST params.bat (del /q params.bat & exit) else (echo No need to restore params.)
 	IF /I '%IN_M%'=='Q' set val_m=1 & GOTO eof
 	IF /I '%IN_M%'=='' set val_m=1
 	if %val_m%==0 call :invald_input 1, 9
