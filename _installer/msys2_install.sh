@@ -6,7 +6,6 @@ pacman -S mingw-w64-x86_64-gcc --noconfirm --needed
 pacman -S make --noconfirm --needed
 pacman -S git --noconfirm --needed
 pacman -S mingw-w64-x86_64-openocd --noconfirm --needed
-# pacman -S mingw-w64-x86_64-openocd-git --noconfirm --needed
 pacman -S mingw-w64-x86_64-SDL2 --noconfirm --needed
 pacman -S wget unzip --noconfirm --needed
 
