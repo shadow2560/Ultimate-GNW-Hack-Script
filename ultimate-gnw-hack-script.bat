@@ -70,6 +70,7 @@ set base_script_path=%~dp0
 set base_script_slash_path=%base_script_path:\=/%
 set mingw64_path=%base_script_path%\msys2\mingw64.exe
 set gnwmanager_path=%base_script_slash_path%_installer/python/tools/scripts/gnwmanager.exe
+set path=%base_script_path%_installer\resources\openocd;%path%
 
 IF EXIST params.bat call params.bat
 
@@ -630,6 +631,10 @@ goto eof
 
 :run_retrogo
 	cd game-and-watch-retro-go
+	IF EXIST external\*.* (
+		call :reset_pyocd
+	)
+	if %errorlevel% NEQ 0 goto eof
 	call _make_links.cmd "%base_script_path%"
 	cd ..
 	call :run_mingw64 ./game-and-watch-retro-go/, "build.sh %adapter% %system% %storage_meg% %boot_type% %clean_build% %proc_number% %retrogo_savestate% %retrogo_lng% %retrogo_coverflows% %retrogo_screenshots% %retrogo_cheats% %retrogo_shared_hibernate_savestate% %retrogo_splash_screen% %retrogo_old_nes_emulator% %retrogo_old_gb_emulator% %retrogo_single_font% %retrogo_filesystem_size% %force_pyocd% %gnwmanager_path%"
@@ -695,12 +700,36 @@ goto eof
 		if exist .\game-and-watch-backup\backups\internal_flash_backup_%system%.bin ( copy .\game-and-watch-backup\backups\internal_flash_backup_%system%.bin .\game-and-watch-patch\ 1>NUL ) else (set run_p=0)
 	)
 	if %run_p%==1 (
+		call :reset_pyocd
+	)
+	if %errorlevel% NEQ 0 goto eof
+	if %run_p%==1 (
 		call :run_mingw64 ./game-and-watch-patch/, "build.sh %adapter% %system% %storage_meg% %boot_type% %clean_build% %force_pyocd% %gnwmanager_path%"
 	) else (
 		echo "Missing Backup-Files in game-and-watch-backup."
 		pause
 	)
 goto eof
+
+:reset_pyocd
+	set pyocd_confirm=
+	IF %force_pyocd% EQU 1 (
+		echo Trying to reboot the device in flash mode for Pyocd, please wait...
+		%gnwmanager_path% info >nul
+		echo The device should be in flash mode, on the next screen if you see a message witch say ^"Waiting for a debug prob to be connected^" just disconect and reconect the adapter.
+		echo If you're not in flash mode reboot the device, disconect the adapter and retry.
+		echo.
+		echo C. Cancel
+		echo O. Validate that you are in flash mode
+		echo All other choices: Retry
+		echo.
+		set /p pyocd_confirm=Make your choice: 
+	)
+IF %force_pyocd% EQU 1 (	
+		if /i "%pyocd_confirm%"=="c" exit /b 1
+		if /i "%pyocd_confirm%"=="o" exit /b 0
+	)
+	goto reset_pyocd
 
 :run_patch_old
 	if %boot_type%==0 (

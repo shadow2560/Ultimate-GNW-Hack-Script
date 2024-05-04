@@ -35,5 +35,5 @@ unzip -o gcc-arm-none-eabi-10.3-2021.10-win32.zip -d ../
 rm gcc-arm-none-eabi-10.3-2021.10-win32.zip
 
 rm /mingw64/bin/openocd.exe
-cp ./resources/openocd.exe /mingw64/bin/openocd.exe
+cp ./resources/openocd/openocd.exe /mingw64/bin/openocd.exe
 rm ./run_again.txt
