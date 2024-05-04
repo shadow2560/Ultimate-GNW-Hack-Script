@@ -29,11 +29,11 @@ wget https://aka.ms/nugetclidl -O nuget.exe
 ./nuget.exe install python -ExcludeVersion -OutputDirectory .
 ./python/tools/python.exe -m pip install --no-warn-script-location pyocd gnwmanager
 
-# rm -r -f ../gcc-arm-none-eabi-10.3-2021.10
-# wget "https://developer.arm.com/-/media/Files/downloads/gnu-rm/10.3-2021.10/gcc-arm-none-eabi-10.3-2021.10-win32.zip?rev=8f4a92e2ec2040f89912f372a55d8cf3&hash=5569B4C322E49BB400BFB63567A4B33B" -O gcc-arm-none-eabi-10.3-2021.10-win32.zip
+rm -r -f ../gcc-arm-none-eabi-10.3-2021.10
+wget "https://developer.arm.com/-/media/Files/downloads/gnu-rm/10.3-2021.10/gcc-arm-none-eabi-10.3-2021.10-win32.zip?rev=8f4a92e2ec2040f89912f372a55d8cf3&hash=5569B4C322E49BB400BFB63567A4B33B" -O gcc-arm-none-eabi-10.3-2021.10-win32.zip
 # wget "https://armkeil.blob.core.windows.net/developer/Files/downloads/gnu-rm/10.3-2021.10/gcc-arm-none-eabi-10.3-2021.10-win32.zip" -o gcc-arm-none-eabi-10.3-2021.10-win32.zip
-# unzip -o gcc-arm-none-eabi-10.3-2021.10-win32.zip -d ../
-# rm gcc-arm-none-eabi-10.3-2021.10-win32.zip
+unzip -o gcc-arm-none-eabi-10.3-2021.10-win32.zip -d ../
+rm gcc-arm-none-eabi-10.3-2021.10-win32.zip
 
 rm /mingw64/bin/openocd.exe
 cp ./resources/openocd.exe /mingw64/bin/openocd.exe
