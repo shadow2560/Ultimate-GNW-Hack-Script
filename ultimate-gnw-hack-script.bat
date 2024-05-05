@@ -712,26 +712,6 @@ exit /b
 	)
 exit /b
 
-:reset_pyocd
-	set pyocd_confirm=
-	IF %force_pyocd% EQU 1 (
-		echo Trying to reboot the device in flash mode for Pyocd, please wait...
-		%gnwmanager_path% info >nul
-		echo The device should be in flash mode, on the next screen if you see a message witch say ^"Waiting for a debug prob to be connected^" just disconect and reconect the adapter.
-		echo If you're not in flash mode reboot the device, disconect the adapter and retry.
-		echo.
-		echo C. Cancel
-		echo O. Validate that you are in flash mode
-		echo All other choices: Retry
-		echo.
-		set /p pyocd_confirm=Make your choice: 
-	)
-IF %force_pyocd% EQU 1 (	
-		if /i "%pyocd_confirm%"=="c" exit /b 1
-		if /i "%pyocd_confirm%"=="o" exit /b 0
-	)
-	goto reset_pyocd
-
 :run_patch_old
 	if %boot_type%==0 (
 		echo Not possible to use this function in single mode boot.
@@ -805,5 +785,25 @@ echo set "retrogo_filesystem_size=%retrogo_filesystem_size%">>params.bat
 echo set "zelda3_lng=%zelda3_lng%">>params.bat
 echo set "zelda3_savestate=%zelda3_savestate%">>params.bat
 exit /b
+
+:reset_pyocd
+	set pyocd_confirm=
+	IF %force_pyocd% EQU 1 (
+		echo Trying to reboot the device in flash mode for Pyocd, please wait...
+		%gnwmanager_path% info >nul
+		echo The device should be in flash mode, on the next screen if you see a message witch say ^"Waiting for a debug prob to be connected^" just disconect and reconect the adapter.
+		echo If you're not in flash mode reboot the device, disconect the adapter and retry.
+		echo.
+		echo C. Cancel
+		echo O. Validate that you are in flash mode
+		echo All other choices: Retry
+		echo.
+		set /p pyocd_confirm=Make your choice: 
+	)
+IF %force_pyocd% EQU 1 (	
+		if /i "%pyocd_confirm%"=="c" exit /b 1
+		if /i "%pyocd_confirm%"=="o" exit /b 0
+	)
+	goto reset_pyocd
 
 :eof
