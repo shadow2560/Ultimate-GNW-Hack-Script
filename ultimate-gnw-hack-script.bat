@@ -597,30 +597,6 @@ exit /b
 	)
 exit /b
 
-:run_mingw64
-	mkdir _tmp
-	echo cd %~1 > _tmp\launch.sh
-	echo export GCC_PATH="%base_script_slash_path%gcc-arm-none-eabi-10.3-2021.10/bin/" >> _tmp\launch.sh
-	::echo export GCC_PATH="%base_script_slash_path%arm-gnu-toolchain-13.2.Rel1-mingw-w64-i686-arm-none-eabi/bin/" >> _tmp\launch.sh
-	::echo export GCC_PATH="%base_script_slash_path%msys2/mingw64/bin/" >> _tmp\launch.sh
-	echo ./%~2 >> _tmp\launch.sh
-	echo read -p ^"Press enter to continue^" >> _tmp\launch.sh
-	"%mingw64_path%" ./_tmp/launch.sh
-	call :wait "mintty.exe"
-	rd /s /q _tmp
-exit /b
-
-:invald_input
-	CLS
-	ECHO ============INVALID INPUT============
-	ECHO -------------------------------------
-	ECHO      Please select a number from 
-	echo                [%~1-%~2] 
-	echo        or select 'Q' to quit.
-	ECHO -------------------------------------
-	PAUSE
-exit /b
-
 :install_env
 	call :run_mingw64 _installer/, msys2_install.sh
 	if exist _installer\run_again.txt (
@@ -742,6 +718,30 @@ exit /b
 		echo "Missing Backup-Files in game-and-watch-backup."
 		pause
 	)
+exit /b
+
+:run_mingw64
+	mkdir _tmp
+	echo cd %~1 > _tmp\launch.sh
+	echo export GCC_PATH="%base_script_slash_path%gcc-arm-none-eabi-10.3-2021.10/bin/" >> _tmp\launch.sh
+	::echo export GCC_PATH="%base_script_slash_path%arm-gnu-toolchain-13.2.Rel1-mingw-w64-i686-arm-none-eabi/bin/" >> _tmp\launch.sh
+	::echo export GCC_PATH="%base_script_slash_path%msys2/mingw64/bin/" >> _tmp\launch.sh
+	echo ./%~2 >> _tmp\launch.sh
+	echo read -p ^"Press enter to continue^" >> _tmp\launch.sh
+	"%mingw64_path%" ./_tmp/launch.sh
+	call :wait "mintty.exe"
+	rd /s /q _tmp
+exit /b
+
+:invald_input
+	CLS
+	ECHO ============INVALID INPUT============
+	ECHO -------------------------------------
+	ECHO      Please select a number from 
+	echo                [%~1-%~2] 
+	echo        or select 'Q' to quit.
+	ECHO -------------------------------------
+	PAUSE
 exit /b
 
 :wait
