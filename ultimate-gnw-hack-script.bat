@@ -144,7 +144,7 @@ goto main
 	echo Zelda3 language: %zelda3_lng%
 	if %zelda3_savestate%==1 (echo Zelda3 and Super Mario World savestate: Enabled) else (echo Zelda3 and Super Mario World savestate: Disabled)
 	echo.
-goto eof
+exit /b
 
 :main
 	call :head
@@ -206,11 +206,11 @@ goto eof
 	IF /I '%IN_M%'=='7' set val_m=1 & call :run_retrogo
 	IF /I '%IN_M%'=='8' set val_m=1 & call :run_zelda3
 	IF /I '%IN_M%'=='9' set val_m=1 & call :run_smw
-	IF /I '%IN_M%'=='S' set val_m=1 & call :settings
-	IF /I '%IN_M%'=='R' set val_m=1 & call :retrogo_settings
-	IF /I '%IN_M%'=='Z' set val_m=1 & call :zelda3_settings
+	IF /I '%IN_M%'=='S' set val_m=1 & call :settings & call :record_params
+	IF /I '%IN_M%'=='R' set val_m=1 & call :retrogo_settings & call :record_params
+	IF /I '%IN_M%'=='Z' set val_m=1 & call :zelda3_settings & call :record_params
 	IF /I '%IN_M%'=='D' set val_m=1 & IF EXIST params.bat (del /q params.bat & exit) else (echo No need to restore params.)
-	IF /I '%IN_M%'=='Q' set val_m=1 & GOTO eof
+	IF /I '%IN_M%'=='Q' set val_m=1 & call :record_params & goto eof
 	IF /I '%IN_M%'=='' set val_m=1
 	if %val_m%==0 call :invald_input 1, 9
 goto main
@@ -241,8 +241,8 @@ goto main
 	IF /I '%IN_B%'=='4' set val_b=1 & call :run_mingw64 ./game-and-watch-backup/, "4_unlock_device.sh %adapter% %system%"
 	IF /I '%IN_B%'=='5' set val_b=1 & call :run_mingw64 ./game-and-watch-backup/, "5_restore.sh %adapter% %system%"
 	IF /I '%IN_B%'=='6' set val_b=1 & call :run_mingw64 ./game-and-watch-backup/, "unlock_gnw.sh "
-	IF /I '%IN_B%'=='S' set val_b=1 & call :settings
-	IF /I '%IN_B%'=='Q' goto eof
+	IF /I '%IN_B%'=='S' set val_b=1 & call :settings & call :record_params
+	IF /I '%IN_B%'=='Q' exit /b
 	IF /I '%IN_B%'=='' set val_b=1
 	if %val_b%==0	call :invald_input 1, 6
 goto backup_menu
@@ -275,7 +275,7 @@ goto backup_menu
 	IF /I '%IN_S%'=='5' set val_s=1 & call :toggle_CB
 	IF /I '%IN_S%'=='6' set val_s=1 & call :set_proc_number
 	IF /I '%IN_S%'=='7' set val_s=1 & call :toggle_pyocd
-	IF /I '%IN_S%'=='Q' goto eof
+	IF /I '%IN_S%'=='Q' exit /b
 	if %val_s%==0	call :invald_input 1, 7
 	goto settings
 
@@ -289,7 +289,7 @@ goto backup_menu
 	) else (
 		set boot_type=0
 	)
-goto eof
+exit /b
 
 :toggle_CB
 	if %clean_build%==1 (
@@ -297,7 +297,7 @@ goto eof
 	) else (
 		set clean_build=1
 	)
-goto eof
+exit /b
 
 :toggle_CB
 	if %force_pyocd%==1 (
@@ -305,7 +305,7 @@ goto eof
 	) else (
 		set force_pyocd=1
 	)
-goto eof
+exit /b
 
 :switch_system
 	if %system%==zelda (
@@ -313,7 +313,7 @@ goto eof
 	) else (
 		set system=zelda
 	)
-goto eof
+exit /b
 
 :switch_adapter
 	if %adapter%==pico (
@@ -321,7 +321,7 @@ goto eof
 	) else (
 		set adapter=pico
 	)
-goto eof
+exit /b
 
 :set_storage
 	call :head
@@ -340,8 +340,8 @@ goto eof
 	IF /I '%VALUE%'=='128' set true=1
 	IF /I '%VALUE%'=='256' set true=1
 	IF /I '%VALUE%'=='512' set true=1
-	IF /I '%VALUE%'=='' goto eof
-	IF /I %true%==1 set "storage_meg=%VALUE%" & goto eof
+	IF /I '%VALUE%'=='' exit /b
+	IF /I %true%==1 set "storage_meg=%VALUE%" & exit /b
 
 	call :invald_input 4, 512
 goto set_storage
@@ -353,7 +353,7 @@ goto set_storage
 	SET VALUE=
 	echo Please input a number of processor^(s^), leave empty to cancel^)
 	SET /P VALUE=Value: 
-	IF /I '%VALUE%'=='' goto eof
+	IF /I '%VALUE%'=='' exit /b
 	call :strlen nb "%VALUE%"
 	set i=0
 	:check_chars_proc_value
@@ -372,12 +372,12 @@ goto set_storage
 		goto :set_proc_number
 		)
 	)
-	IF /I %VALUE% LSS 1 set proc_number=1 & goto eof
+	IF /I %VALUE% LSS 1 set proc_number=1 & exit /b
 	IF NOT "%NUMBER_OF_PROCESSORS%"=="" (
-		IF /I %VALUE% GTR %NUMBER_OF_PROCESSORS% set proc_number=%NUMBER_OF_PROCESSORS% & goto eof
+		IF /I %VALUE% GTR %NUMBER_OF_PROCESSORS% set proc_number=%NUMBER_OF_PROCESSORS% & exit /b
 	)
 	set proc_number=%VALUE%
-	goto eof
+	exit /b
 
 :retrogo_settings
 	call :head
@@ -415,7 +415,7 @@ goto set_storage
 	IF /I '%IN_R%'=='9' set val_r=1 & call :toggle_retrogo_old_gb_emulator
 	IF /I '%IN_R%'=='10' set val_r=1 & call :toggle_retrogo_single_font
 	IF /I '%IN_R%'=='11' set val_r=1 & call :set_retrogo_filesystem_size
-	IF /I '%IN_R%'=='Q' goto eof
+	IF /I '%IN_R%'=='Q' exit /b
 	if %val_r%==0	call :invald_input 1, 11
 	goto retrogo_settings
 
@@ -426,7 +426,7 @@ goto set_storage
 	SET VALUE=
 	echo Please input a size in %% for Retrogo filesystem ^(0 to 99, leave empty to cancel^)
 	SET /P VALUE=Value: 
-	IF /I '%VALUE%'=='' goto eof
+	IF /I '%VALUE%'=='' exit /b
 	call :strlen nb "%VALUE%"
 	set i=0
 	:check_chars_rfs_value
@@ -445,10 +445,10 @@ goto set_storage
 		goto :set_retrogo_filesystem_size
 		)
 	)
-	IF /I %VALUE% LSS 0 set retrogo_filesystem_size=0 & goto eof
-	IF /I %VALUE% GTR 99 set retrogo_filesystem_size=99 & goto eof
+	IF /I %VALUE% LSS 0 set retrogo_filesystem_size=0 & exit /b
+	IF /I %VALUE% GTR 99 set retrogo_filesystem_size=99 & exit /b
 	set retrogo_filesystem_size=%VALUE%
-	goto eof
+	exit /b
 
 :toggle_retrogo_old_gb_emulator
 	if %retrogo_old_gb_emulator%==1 (
@@ -456,7 +456,7 @@ goto set_storage
 	) else (
 		set retrogo_old_gb_emulator=1
 	)
-goto eof
+exit /b
 
 :toggle_retrogo_single_font
 	if %retrogo_single_font%==1 (
@@ -464,7 +464,7 @@ goto eof
 	) else (
 		set retrogo_single_font=1
 	)
-goto eof
+exit /b
 
 :toggle_retrogo_savestate
 	if %retrogo_savestate%==1 (
@@ -472,7 +472,7 @@ goto eof
 	) else (
 		set retrogo_savestate=1
 	)
-goto eof
+exit /b
 
 :set_retrogo_lng
 	call :head
@@ -494,18 +494,18 @@ goto eof
 	echo.
 	SET /P VALUE=Please select a number: 
 
-	IF /I '%VALUE%'=='1' set retrogo_lng=1252 & goto eof
-	IF /I '%VALUE%'=='2' set retrogo_lng=12523 & goto eof
-	IF /I '%VALUE%'=='3' set retrogo_lng=12525 & goto eof
-	IF /I '%VALUE%'=='4' set retrogo_lng=12524 & goto eof
-	IF /I '%VALUE%'=='5' set retrogo_lng=12522 & goto eof
-	IF /I '%VALUE%'=='6' set retrogo_lng=12511 & goto eof
-	IF /I '%VALUE%'=='7' set retrogo_lng=12521 & goto eof
-	IF /I '%VALUE%'=='8' set retrogo_lng=932 & goto eof
-	IF /I '%VALUE%'=='9' set retrogo_lng=936 & goto eof
-	IF /I '%VALUE%'=='10' set retrogo_lng=950 & goto eof
-	IF /I '%VALUE%'=='11' set retrogo_lng=949 & goto eof
-	IF /I '%VALUE%'=='Q' goto eof
+	IF /I '%VALUE%'=='1' set retrogo_lng=1252 & exit /b
+	IF /I '%VALUE%'=='2' set retrogo_lng=12523 & exit /b
+	IF /I '%VALUE%'=='3' set retrogo_lng=12525 & exit /b
+	IF /I '%VALUE%'=='4' set retrogo_lng=12524 & exit /b
+	IF /I '%VALUE%'=='5' set retrogo_lng=12522 & exit /b
+	IF /I '%VALUE%'=='6' set retrogo_lng=12511 & exit /b
+	IF /I '%VALUE%'=='7' set retrogo_lng=12521 & exit /b
+	IF /I '%VALUE%'=='8' set retrogo_lng=932 & exit /b
+	IF /I '%VALUE%'=='9' set retrogo_lng=936 & exit /b
+	IF /I '%VALUE%'=='10' set retrogo_lng=950 & exit /b
+	IF /I '%VALUE%'=='11' set retrogo_lng=949 & exit /b
+	IF /I '%VALUE%'=='Q' exit /b
 	
 	call :invald_input 1, 11
 goto set_retrogo_lng
@@ -516,7 +516,7 @@ goto set_retrogo_lng
 	) else (
 		set retrogo_coverflows=1
 	)
-goto eof
+exit /b
 
 :toggle_retrogo_screenshots
 	if %retrogo_screenshots%==1 (
@@ -524,7 +524,7 @@ goto eof
 	) else (
 		set retrogo_screenshots=1
 	)
-goto eof
+exit /b
 
 :toggle_retrogo_cheats
 	if %retrogo_cheats%==1 (
@@ -532,7 +532,7 @@ goto eof
 	) else (
 		set retrogo_cheats=1
 	)
-goto eof
+exit /b
 
 :toggle_retrogo_shared_hibernate_savestate
 	if %retrogo_shared_hibernate_savestate%==1 (
@@ -540,7 +540,7 @@ goto eof
 	) else (
 		set retrogo_shared_hibernate_savestate=1
 	)
-goto eof
+exit /b
 
 :toggle_retrogo_splash_screen
 	if %retrogo_splash_screen%==1 (
@@ -548,7 +548,7 @@ goto eof
 	) else (
 		set retrogo_splash_screen=1
 	)
-goto eof
+exit /b
 
 :toggle_retrogo_old_nes_emulator
 	if %retrogo_old_nes_emulator%==1 (
@@ -556,7 +556,7 @@ goto eof
 	) else (
 		set retrogo_old_nes_emulator=1
 	)
-goto eof
+exit /b
 
 :zelda3_settings
 	call :head
@@ -576,7 +576,7 @@ goto eof
 	SET /P IN_Z=Please select a number: 
 	IF /I '%IN_Z%'=='1' set val_z=1 & call :set_zelda3_lng
 	IF /I '%IN_Z%'=='2' set val_z=1 & call :toggle_zelda3_savestate
-	IF /I '%IN_Z%'=='Q' goto eof
+	IF /I '%IN_Z%'=='Q' exit /b
 	if %val_z%==0	call :invald_input 1, 6
 	goto zelda3_settings
 
@@ -587,7 +587,7 @@ goto eof
 	SET zelda3_lng=us
 	echo Please input a language code for zelda3 translation, if different than "us" you will need to also put the rom containing the language named "zelda3_[language_code].sfc" into the folder "game-and-watch-zelda3\zelda3\tables" in addition of the US rom of zelda3 named "zelda3.sfc" ^(if empty value language will be set to "us"^).
 	SET /P zelda3_lng=Zelda3 language value: 
-goto eof
+exit /b
 
 :toggle_zelda3_savestate
 	if %zelda3_savestate%==1 (
@@ -595,7 +595,7 @@ goto eof
 	) else (
 		set zelda3_savestate=1
 	)
-goto eof
+exit /b
 
 :run_mingw64
 	mkdir _tmp
@@ -608,7 +608,7 @@ goto eof
 	"%mingw64_path%" ./_tmp/launch.sh
 	call :wait "mintty.exe"
 	rd /s /q _tmp
-goto eof
+exit /b
 
 :invald_input
 	CLS
@@ -619,29 +619,28 @@ goto eof
 	echo        or select 'Q' to quit.
 	ECHO -------------------------------------
 	PAUSE
-goto eof
-
+exit /b
 
 :install_env
 	call :run_mingw64 _installer/, msys2_install.sh
 	if exist _installer\run_again.txt (
 		goto install_env
 	)
-goto eof
+exit /b
 
 :run_retrogo
 	cd game-and-watch-retro-go
 	IF EXIST external\*.* (
 		call :reset_pyocd
 	)
-	if %errorlevel% NEQ 0 goto eof
+	if %errorlevel% NEQ 0 exit /b
 	call _make_links.cmd "%base_script_path%"
 	cd ..
 	call :run_mingw64 ./game-and-watch-retro-go/, "build.sh %adapter% %system% %storage_meg% %boot_type% %clean_build% %proc_number% %retrogo_savestate% %retrogo_lng% %retrogo_coverflows% %retrogo_screenshots% %retrogo_cheats% %retrogo_shared_hibernate_savestate% %retrogo_splash_screen% %retrogo_old_nes_emulator% %retrogo_old_gb_emulator% %retrogo_single_font% %retrogo_filesystem_size% %force_pyocd% %gnwmanager_path%"
 	cd game-and-watch-retro-go
 	call _remove_links.cmd
 	cd ..
-	goto eof
+	exit /b
 
 :run_zelda3
 	if /i NOT "%zelda3_lng%" == "us" (
@@ -664,7 +663,7 @@ goto eof
 		echo "Please put a copy of \"zelda3.sfc\" ^(rom USA^) into folder \".\game-and-watch-zelda3\zelda3\tables\""
 	)
 	pause
-	goto eof
+	exit /b
 
 :run_smw
 	if  exist .\game-and-watch-smw\smw\assets\smw.sfc (
@@ -673,18 +672,18 @@ goto eof
 	)
 	echo "Please put a copy of \"smw.sfc\" ^(rom USA of Super Mario World^) into folder \".\game-and-watch-smw\smw\assets\""
 	pause
-	goto eof
+	exit /b
 
 :run_patch
 	if %boot_type%==0 (
 		echo Not possible to use this function in single mode boot.
 		pause
-		goto eof
+		exit /b
 	)
 	if %boot_type%==2 (
 		echo Not possible to use this function in dual boot Retrogo + Zelda3 or Super Mario World.
 		pause
-		goto eof
+		exit /b
 	)
 	set run_p=1
 	if NOT exist .\game-and-watch-patch\flash_backup_%system%.bin (
@@ -702,14 +701,16 @@ goto eof
 	if %run_p%==1 (
 		call :reset_pyocd
 	)
-	if %errorlevel% NEQ 0 goto eof
+	if %errorlevel% NEQ 0 (
+		exit /b
+	)
 	if %run_p%==1 (
 		call :run_mingw64 ./game-and-watch-patch/, "build.sh %adapter% %system% %storage_meg% %boot_type% %clean_build% %force_pyocd% %gnwmanager_path%"
 	) else (
 		echo "Missing Backup-Files in game-and-watch-backup."
 		pause
 	)
-goto eof
+exit /b
 
 :reset_pyocd
 	set pyocd_confirm=
@@ -735,12 +736,12 @@ IF %force_pyocd% EQU 1 (
 	if %boot_type%==0 (
 		echo Not possible to use this function in single mode boot.
 		pause
-		goto eof
+		exit /b
 	)
 	if %boot_type%==2 (
 		echo Not possible to use this function in dual boot Retrogo + Zelda3 or Super Mario World.
 		pause
-		goto eof
+		exit /b
 	)
 	set run_p=1
 	if NOT exist .\game-and-watch-patch-old_method\flash_backup_%system%.bin (
@@ -761,15 +762,15 @@ IF %force_pyocd% EQU 1 (
 		echo "Missing Backup-Files in game-and-watch-backup."
 		pause
 	)
-goto eof
+exit /b
 
 :wait
 	%windir%\system32\timeout.exe /t 1 /nobreak >nul 2>&1
 	%windir%\system32\tasklist.exe /fi "ImageName eq %~1" /fo csv 2>NUL | %windir%\system32\find.exe /I "%~1" >NUL
-	if errorlevel 1 goto wait_end
+	if %errorlevel% EQU 1 goto wait_end
 	goto wait
 :wait_end
-goto eof
+exit /b
 
 :strlen
 	set "string=%~2"
@@ -781,7 +782,7 @@ goto eof
 		if defined string goto:lengthLoop
 	:end_lengthLoop
 	set %~1=%stringLength%
-	goto eof
+	exit /b
 
 :record_params
 echo set "system=%system%">params.bat
@@ -803,9 +804,6 @@ echo set "retrogo_single_font=%retrogo_single_font%">>params.bat
 echo set "retrogo_filesystem_size=%retrogo_filesystem_size%">>params.bat
 echo set "zelda3_lng=%zelda3_lng%">>params.bat
 echo set "zelda3_savestate=%zelda3_savestate%">>params.bat
-goto eof2
+exit /b
 
 :eof
-call :record_params
-
-:eof2
