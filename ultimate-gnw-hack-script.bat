@@ -41,6 +41,7 @@ cd /d %~dp0
 if '%1'=='ELEV' (del "%vbsGetPrivileges%" 1>nul 2>nul  &  shift /1)
 
 rem ------------ START OF ACTUAL SCRIPT ------------------------------------------------
+chcp 65001 >nul
 setlocal EnableDelayedExpansion
 set system=zelda
 set storage_meg=64
@@ -76,7 +77,7 @@ IF EXIST params.bat call params.bat
 
 goto main
 
-:head
+:header
 	CLS
 	title Ultimate-GNW-Hack-Script v1.0.0
 	echo === Ultimate-GNW-Hack-Script ==
@@ -147,7 +148,7 @@ goto main
 exit /b
 
 :main
-	call :head
+	call :header
 	echo - [Main Menu] -----------------------
 	echo.
 	echo 1. Install Msys2
@@ -212,11 +213,11 @@ exit /b
 	IF /I '%IN_M%'=='D' set val_m=1 & IF EXIST params.bat (del /q params.bat & exit) else (echo No need to restore params.)
 	IF /I '%IN_M%'=='Q' set val_m=1 & call :record_params & goto eof
 	IF /I '%IN_M%'=='' set val_m=1
-	if %val_m%==0 call :invald_input 1, 9
+	if %val_m%==0 call :invald_input 1 9 "Q, S, R or Z."
 goto main
 
 :backup_menu
-	call :head
+	call :header
 	echo - [GnW-Backup Menu] -----------------
 	echo.
 	echo 1. Sanity Check
@@ -244,11 +245,11 @@ goto main
 	IF /I '%IN_B%'=='S' set val_b=1 & call :settings & call :record_params
 	IF /I '%IN_B%'=='Q' exit /b
 	IF /I '%IN_B%'=='' set val_b=1
-	if %val_b%==0	call :invald_input 1, 6
+	if %val_b%==0	call :invald_input 1 6 "Q or S."
 goto backup_menu
 
 :settings
-	call :head
+	call :header
 	echo - [Settings Menu ] ------------------
 	echo.
 	echo 1. Change System [mario^|zelda]
@@ -276,7 +277,7 @@ goto backup_menu
 	IF /I '%IN_S%'=='6' set val_s=1 & call :set_proc_number
 	IF /I '%IN_S%'=='7' set val_s=1 & call :toggle_pyocd
 	IF /I '%IN_S%'=='Q' exit /b
-	if %val_s%==0	call :invald_input 1, 7
+	if %val_s%==0	call :invald_input 1 7 "Q."
 	goto settings
 
 :toggle_TB
@@ -324,7 +325,7 @@ exit /b
 exit /b
 
 :set_storage
-	call :head
+	call :header
 	echo - [Setting Storage Size] ------------
 	echo.
 	SET VALUE=
@@ -342,12 +343,11 @@ exit /b
 	IF /I '%VALUE%'=='512' set true=1
 	IF /I '%VALUE%'=='' exit /b
 	IF /I %true%==1 set "storage_meg=%VALUE%" & exit /b
-
-	call :invald_input 4, 512
+	call :invald_input 4 512
 goto set_storage
 
 :set_proc_number
-	call :head
+	call :header
 	echo - [Setting Number Of Processors] ------------
 	echo.
 	SET VALUE=
@@ -380,7 +380,7 @@ goto set_storage
 	exit /b
 
 :retrogo_settings
-	call :head
+	call :header
 	echo - [Retrogo Settings Menu ] ------------------
 	echo.
 	echo 1. Toggle Retrogo savestate
@@ -416,11 +416,11 @@ goto set_storage
 	IF /I '%IN_R%'=='10' set val_r=1 & call :toggle_retrogo_single_font
 	IF /I '%IN_R%'=='11' set val_r=1 & call :set_retrogo_filesystem_size
 	IF /I '%IN_R%'=='Q' exit /b
-	if %val_r%==0	call :invald_input 1, 11
+	if %val_r%==0	call :invald_input 1 11 "Q."
 	goto retrogo_settings
 
 :set_retrogo_filesystem_size
-	call :head
+	call :header
 	echo - [Setting Retrogo Filesystem Size] ------------
 	echo.
 	SET VALUE=
@@ -475,7 +475,7 @@ exit /b
 exit /b
 
 :set_retrogo_lng
-	call :head
+	call :header
 	echo - [Setting Retrogo Language] ------------
 	echo.
 	SET VALUE=
@@ -493,7 +493,6 @@ exit /b
 	echo Q. Back
 	echo.
 	SET /P VALUE=Please select a number: 
-
 	IF /I '%VALUE%'=='1' set retrogo_lng=1252 & exit /b
 	IF /I '%VALUE%'=='2' set retrogo_lng=12523 & exit /b
 	IF /I '%VALUE%'=='3' set retrogo_lng=12525 & exit /b
@@ -506,8 +505,7 @@ exit /b
 	IF /I '%VALUE%'=='10' set retrogo_lng=950 & exit /b
 	IF /I '%VALUE%'=='11' set retrogo_lng=949 & exit /b
 	IF /I '%VALUE%'=='Q' exit /b
-	
-	call :invald_input 1, 11
+	call :invald_input 1 11 "Q."
 goto set_retrogo_lng
 
 :toggle_retrogo_coverflows
@@ -559,7 +557,7 @@ exit /b
 exit /b
 
 :zelda3_settings
-	call :head
+	call :header
 	echo - [Zelda3 and Super Mario World Settings Menu ] ------------------
 	echo.
 	echo 1. Set Zelda3 Language Code
@@ -577,11 +575,11 @@ exit /b
 	IF /I '%IN_Z%'=='1' set val_z=1 & call :set_zelda3_lng
 	IF /I '%IN_Z%'=='2' set val_z=1 & call :toggle_zelda3_savestate
 	IF /I '%IN_Z%'=='Q' exit /b
-	if %val_z%==0	call :invald_input 1, 6
+	if %val_z%==0	call :invald_input 1 2 "Q."
 	goto zelda3_settings
 
 :set_zelda3_lng
-	call :head
+	call :header
 	echo - [Setting Zelda3 language] ------------
 	echo.
 	SET zelda3_lng=us
@@ -739,7 +737,9 @@ exit /b
 	ECHO -------------------------------------
 	ECHO      Please select a number from 
 	echo                [%~1-%~2] 
-	echo        or select 'Q' to quit.
+	if not "%~3"=="" (
+		echo        or select letter^(s^) %~3
+	)
 	ECHO -------------------------------------
 	PAUSE
 exit /b
@@ -768,7 +768,7 @@ exit /b
 echo set "system=%system%">params.bat
 echo set "storage_meg=%storage_meg%">>params.bat
 echo set "adapter=%adapter%">>params.bat
-echo "set boot_type=%boot_type%">>params.bat
+echo set "boot_type=%boot_type%">>params.bat
 echo set "clean_build=%clean_build%">>params.bat
 echo set "force_pyocd=%force_pyocd%">>params.bat
 echo set "retrogo_savestate=%retrogo_savestate%">>params.bat
