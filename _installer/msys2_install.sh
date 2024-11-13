@@ -11,7 +11,8 @@ pacman -S wget unzip --noconfirm --needed
 
 # pacman -S mingw-w64-x86_64-rust cmake mingw-w64-x86_64-python-capstone mingw-w64-x86_64-cargo-c mingw-w64-x86_64-cmake mingw-w64-x86_64-emacs mingw-w64-x86_64-make
 
-SETUPTOOLS_USE_DISTUTILS=stdlib pip install --upgrade gnwmanager
+SETUPTOOLS_USE_DISTUTILS=stdlib
+# pip install --break-system-packages --upgrade gnwmanager
 
 # pip install cmsis-pack-manager
 # SETUPTOOLS_USE_DISTUTILS=stdlib CMAKE_C_COMPILER=gcc CMAKE_CXX_COMPILER=g++ CMAKE_EXE_LINKER_FLAGS="-Wl,--allow-multiple-definition" pip install --use-pep517 pyocd
@@ -25,8 +26,8 @@ SETUPTOOLS_USE_DISTUTILS=stdlib pip install --upgrade gnwmanager
 
 rm -r -f ./python
 wget https://aka.ms/nugetclidl -O nuget.exe
-./nuget.exe install python -ExcludeVersion -OutputDirectory .
-./python/tools/python.exe -m pip install --no-warn-script-location pyocd gnwmanager
+./nuget.exe install python -version 3.12.3 -ExcludeVersion -OutputDirectory .
+./python/tools/python.exe -m pip install --break-system-packages --no-warn-script-location pyocd gnwmanager
 
 rm -r -f ../gcc-arm-none-eabi-10.3-2021.10
 wget "https://developer.arm.com/-/media/Files/downloads/gnu-rm/10.3-2021.10/gcc-arm-none-eabi-10.3-2021.10-win32.zip?rev=8f4a92e2ec2040f89912f372a55d8cf3&hash=5569B4C322E49BB400BFB63567A4B33B" -O gcc-arm-none-eabi-10.3-2021.10-win32.zip
