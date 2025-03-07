@@ -790,7 +790,7 @@ exit /b
 	set pyocd_confirm=
 	IF %force_pyocd% EQU 1 (
 		echo Trying to reboot the device in flash mode for Pyocd, please wait...
-		%gnwmanager_path% info >nul
+		%gnwmanager_path% -b pyocd info >nul
 		echo The device should be in flash mode, on the next screen if you see a message witch say ^"Waiting for a debug prob to be connected^" just disconect and reconect the adapter.
 		echo If you're not in flash mode reboot the device, disconect the adapter and retry.
 		echo.
