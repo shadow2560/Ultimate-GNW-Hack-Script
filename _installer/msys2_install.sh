@@ -28,6 +28,8 @@ rm -r -f ./python
 wget https://aka.ms/nugetclidl -O nuget.exe
 ./nuget.exe install python -version 3.12.3 -ExcludeVersion -OutputDirectory .
 ./python/tools/python.exe -m pip install --break-system-packages --no-warn-script-location pyocd gnwmanager
+cp ./resources/libusb-1.0.dll ./python/tools/libusb-1.0.dll
+cp ./resources/libusb-1.0.dll ./python/tools/Scripts/libusb-1.0.dll
 
 rm -r -f ../gcc-arm-none-eabi-10.3-2021.10
 wget "https://developer.arm.com/-/media/Files/downloads/gnu-rm/10.3-2021.10/gcc-arm-none-eabi-10.3-2021.10-win32.zip?rev=8f4a92e2ec2040f89912f372a55d8cf3&hash=5569B4C322E49BB400BFB63567A4B33B" -O gcc-arm-none-eabi-10.3-2021.10-win32.zip
