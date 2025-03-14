@@ -45,6 +45,7 @@ Note: With the explained dual boot configuration you can launch Retro-go with th
 * [Game-and-watch-msys2]((https://github.com/ManCloud/game-and-watch-msys2)
 * [Msys2](https://www.msys2.org/)
 * [Wget](https://eternallybored.org/misc/wget)
+* [Nuget](https://www.nuget.org/)
 * [Game-and-watch-backup](https://github.com/ghidraninja/game-and-watch-backup)
 * [Game-and-watch-patch](https://github.com/BrianPugh/game-and-watch-patch)
 * [Game-and-watch-retro-go](https://github.com/sylverb/game-and-watch-retro-go)
