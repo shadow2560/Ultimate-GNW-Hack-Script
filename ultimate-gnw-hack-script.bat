@@ -167,6 +167,7 @@ exit /b
 	echo R. Retrogo Settings Menu
 	echo Z. Zelda3 and Super Mario World Settings Menu
 	echo D. Restore params to default ^(will also exit the script^)
+	echo G. Make me a donation
 	echo Q. Quit
 	echo.
 	echo -------------------------------------
@@ -210,11 +211,36 @@ exit /b
 	IF /I '%IN_M%'=='S' set val_m=1 & call :settings & call :record_params
 	IF /I '%IN_M%'=='R' set val_m=1 & call :retrogo_settings & call :record_params
 	IF /I '%IN_M%'=='Z' set val_m=1 & call :zelda3_settings & call :record_params
-	IF /I '%IN_M%'=='D' set val_m=1 & IF EXIST params.bat (del /q params.bat & exit) else (echo No need to restore params.)
+	IF /I '%IN_M%'=='D' set val_m=1 & IF EXIST params.bat (del /q params.bat & exit) else (echo No need to restore params. & pause)
+	IF /I '%IN_M%'=='G' set val_m=1 & call :donate_menu
 	IF /I '%IN_M%'=='Q' set val_m=1 & call :record_params & goto eof
 	IF /I '%IN_M%'=='' set val_m=1
-	if %val_m%==0 call :invald_input 1 9 "Q, S, R or Z."
+	if %val_m%==0 call :invald_input 1 9 "Q, G, D, S, R or Z."
 goto main
+
+:donate_menu
+	cls
+	echo - Donation Menu -----------------
+	echo.
+	echo Thanks in advance for your donation.
+	echo.
+	echo How do you want to do the donation:
+	echo 1. Donate via Paypal if you have a Paypal account ^(open my Paypal page, no transaction fees^)
+	echo 2. Donate by credit card if you don't have a Paypal account ^(opens my Paypal page, transaction fees^)
+	echo Q. Back
+	echo.
+	set action_choice=
+	set /p action_choice=Make your choice: 
+	IF "%action_choice%"=="1" (
+		start https://www.paypal.me/shadow256
+		goto:donate_menu
+	)
+	IF "%action_choice%"=="2" (
+		start https://www.paypal.com/donate/?hosted_button_id=XZXKWXNX5V3KN 
+		goto:donate_menu
+	)
+	if /i "%action_choice%"=="Q" exit /b
+	call :invald_input 1 2 "Q." & goto:donate_menu
 
 :backup_menu
 	call :header
