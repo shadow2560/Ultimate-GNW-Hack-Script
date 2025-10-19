@@ -4,7 +4,7 @@ Game-and-Watch "all-in-one" solution for Windows using batch, Python and MSYS2.
 
 Largely based on the work of [this project of ManCloud](https://github.com/ManCloud/game-and-watch-msys2)
 
-This script is licenced under GPL V3, other programs used by the script could have a different licence.
+This script is licenced under MIT licence, other programs used by the script could have a different licence.
 
 ## Important notes
 
