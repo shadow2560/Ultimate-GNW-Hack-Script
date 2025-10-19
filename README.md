@@ -1,14 +1,16 @@
 # Ultimate-GNW-Hack-Script
 
-Game-and-Watch "all-in-one" solution for Windows using MSYS2.
+Game-and-Watch "all-in-one" solution for Windows using batch, Python and MSYS2.
 
 Largely based on the work of [this project of ManCloud](https://github.com/ManCloud/game-and-watch-msys2)
+
+This script is licenced under GPL V3, other programs used by the script could have a different licence.
 
 ## Important notes
 
 You must install the drivers of your adapter yourself, this will be not covered by the script. For now only Pico and Stlink adapters are supported by the script.
 
-You must know how to configure the different elements installed on the Game-and-Watch (how to backup it, unlock it, install CFW, install Retro-go, install Super Mario World and install Zelda3), for example you should know where to place the original backup of the Game-and-Watch to install the CFW or you should know where to place the roms for Retro-go, all these things will not be covered here. The script will only help you to setup correctly the commands used to flash the elements.
+You must know how to configure the different elements installed on the Game-and-Watch (how to backup it, unlock it, install CFW, install Retro-go, install Super Mario World and install Zelda3), for example you should know where to place the original backup of the Game-and-Watch to install the CFW or you should know where to place the roms for Retro-go, all these things will not be covered here. The script will only help you to setup correctly the commands used to flash the elements and no roms neither dump of the GNW models are  and will be included.
 
 Pin out and method to launch the flash will not be covered here
 
@@ -24,13 +26,17 @@ You can put some important files to automaticaly copy them during initialization
 * game-and-watch-smw/smw/assets: Put the US sfc rom of Super Mario World named "smw.sfc", required to build the project.
 * game-and-watch-zelda3/zelda3/tables: Put the US sfc rom of Zelda3 named "zelda3.sfc", required to build the project. You can also put others sfc roms to use others languages, for example for french you must put the french rom of Zelda3 named "zelda3_fr.sfc".
 
+Note that you can also copy these files to the corresponding paths after the clone of the repositories, the repositories folders are around the script file and the folders in "_installer/resources" are mirors of the configs for the real repositories.
+
 ## First launch
 
 Execute the first, second and third choice in the main menu to install the environement. If you want to update the environement you can re-execute the second and third choice. If you want only update the repositories used you only need to execute the third choice.
 
 ## Typical use
 
-Most settings are set by default for a typical use, adjust them if you need before launching any script. If you close the script the settings will be reset to default. Most often you will need to change the size of the memory according to the one used on the Game-and-Watch, the model of the Game-and-Watch used and the boot type that you want. The settings are always displayed before the proposed choices in every menus.
+Most settings are set by default for a typical use, adjust them if you need before launching any script. Most often you will need to change the size of the memory according to the one used on the Game-and-Watch, the model of the Game-and-Watch used and the boot type that you want. The settings are always displayed before the proposed choices in every menus.
+
+If you want to reset the settings just close the script, delete the file "params.bat" and relaunch the script.
 
 The backups are not unic for each console, only for each model so if you've already have the backup files of hte model you don't need to make it again. If you don't have it you will need to do them in the GnW-Backup menu (choice "2" and "3" in this menu).
 
@@ -46,8 +52,11 @@ Note: With the explained dual boot configuration you can launch Retro-go with th
 * [Msys2](https://www.msys2.org/)
 * [Wget](https://eternallybored.org/misc/wget)
 * [Nuget](https://www.nuget.org/)
+* [Gnwmanager](https://github.com/BrianPugh/gnwmanager)
 * [Game-and-watch-backup](https://github.com/ghidraninja/game-and-watch-backup)
 * [Game-and-watch-patch](https://github.com/BrianPugh/game-and-watch-patch)
 * [Game-and-watch-retro-go](https://github.com/sylverb/game-and-watch-retro-go)
 * [Game-and-watch-smw](https://github.com/marian-m12l/game-and-watch-smw)
 * [Game-and-watch-zelda3](https://github.com/marian-m12l/game-and-watch-zelda3)
+* All libraries used by Msys2 and Python.
+* And all programs that I may forget to credit here.
