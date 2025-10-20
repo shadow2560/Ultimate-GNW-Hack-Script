@@ -46,6 +46,8 @@ After this and eventualy after changing the memory of the Game-and-Watch you can
 
 Note: With the explained dual boot configuration you can launch Retro-go with the shortcut "Game+left" on the original firmware.
 
+If you want to know more about SD mod please visit the [retrogo sd mod project of sylverb](https://github.com/sylverb/game-and-watch-retro-go-sd), only the flash of the patch is covered by this script.
+
 ## Credits
 
 * [Game-and-watch-msys2]((https://github.com/ManCloud/game-and-watch-msys2)

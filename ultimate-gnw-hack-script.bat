@@ -157,9 +157,10 @@ exit /b
 	echo 4. GnW-Backup Menu
 	echo 5. Flash GnW-Patch ^(needs Backup files in "game-and-watch-patch" folder^)
 	echo 6. Flash GnW-Patch ^(old method, needs Backup files in "game-and-watch-patch-old_method" folder^)
-	echo 7. Flash GnW-Retro-Go
-	echo 8. Flash GnW-Zelda3 ^(obsolete^)
-	echo 9. Flash GnW-Super-Mario-World ^(obsolete^)
+	echo 7. Flash patch for SD mod ^(Beta function, only for zelda model, single boot or dual boot with firmware in bank 1 and backup needed in "game-and-watch-backup\backups" or "game-and-watch-patch" or "game-and-watch-patch-old_method" for dual boot config^)
+	echo 8. Flash GnW-Retro-Go
+	echo 9. Flash GnW-Zelda3 ^(obsolete^)
+	echo 10. Flash GnW-Super-Mario-World ^(obsolete^)
 	echo.
 	echo -------------------------------------
 	echo.
@@ -205,9 +206,10 @@ exit /b
 	IF /I '%IN_M%'=='4' set val_m=1 & call :backup_menu
 	IF /I '%IN_M%'=='5' set val_m=1 & call :run_patch
 	IF /I '%IN_M%'=='6' set val_m=1 & call :run_patch_old
-	IF /I '%IN_M%'=='7' set val_m=1 & call :run_retrogo
-	IF /I '%IN_M%'=='8' set val_m=1 & call :run_zelda3
-	IF /I '%IN_M%'=='9' set val_m=1 & call :run_smw
+	IF /I '%IN_M%'=='7' set val_m=1 & call :run_patch_sd_mod
+	IF /I '%IN_M%'=='8' set val_m=1 & call :run_retrogo
+	IF /I '%IN_M%'=='9' set val_m=1 & call :run_zelda3
+	IF /I '%IN_M%'=='10' set val_m=1 & call :run_smw
 	IF /I '%IN_M%'=='S' set val_m=1 & call :settings & call :record_params
 	IF /I '%IN_M%'=='R' set val_m=1 & call :retrogo_settings & call :record_params
 	IF /I '%IN_M%'=='Z' set val_m=1 & call :zelda3_settings & call :record_params
@@ -215,7 +217,7 @@ exit /b
 	IF /I '%IN_M%'=='G' set val_m=1 & call :donate_menu
 	IF /I '%IN_M%'=='Q' set val_m=1 & call :record_params & goto eof
 	IF /I '%IN_M%'=='' set val_m=1
-	if %val_m%==0 call :invald_input 1 9 "Q, G, D, S, R or Z."
+	if %val_m%==0 call :invald_input 1 10 "Q, G, D, S, R or Z."
 goto main
 
 :donate_menu
@@ -710,6 +712,66 @@ exit /b
 		echo "Missing Backup-Files in game-and-watch-backup."
 		pause
 	)
+exit /b
+
+:run_patch_sd_mod
+	if not exist "%gnwmanager_path%" (
+		echo GNWManager not founded, please make the libraries installations first ^(choices "1", "2" and "3" in main menu^).
+		pause
+		exit /b
+	)
+	if %boot_type%==2 (
+		echo Not possible to use this function in dual boot Retrogo + Zelda3 or Super Mario World.
+		pause
+		exit /b
+	)
+	if %boot_type%==3 (
+		echo Not possible to use this function in triple boot.
+		pause
+		exit /b
+	)
+	if not "%system%"=="zelda" (
+		echo Not possible to use this function with other model than zelda.
+		pause
+		exit /b
+	)
+	if %boot_type%==1 (
+		set sd_patch_backup=
+		set sd_patch_internal_backup=
+		if exist .\game-and-watch-backup\backups\flash_backup_%system%.bin (
+			set sd_patch_backup=.\game-and-watch-backup\backups\flash_backup_%system%.bin
+			if exist .\game-and-watch-backup\backups\internal_flash_backup_%system%.bin (
+				set sd_patch_internal_backup=.\game-and-watch-backup\backups\internal_flash_backup_%system%.bin
+				goto:flash_sd_mod
+			)
+		)
+		if exist .\game-and-watch-patch\flash_backup_%system%.bin (
+			set sd_patch_backup=.\game-and-watch-patch\flash_backup_%system%.bin
+			if exist .\game-and-watch-patch\internal_flash_backup_%system%.bin (
+				set sd_patch_internal_backup=.\game-and-watch-patch\internal_flash_backup_%system%.bin
+				goto:flash_sd_mod
+			)
+		)
+		if exist .\game-and-watch-patch-old-method\flash_backup_%system%.bin (
+			set sd_patch_backup=.\game-and-watch-patch-old-method\flash_backup_%system%.bin
+			if exist .\game-and-watch-patch-old-method\internal_flash_backup_%system%.bin (
+				set sd_patch_internal_backup=.\game-and-watch-patch-old-method\internal_flash_backup_%system%.bin
+				goto:flash_sd_mod
+			)
+		)
+	) else (
+		goto:flash_sd_mod
+	)
+	echo Backups of the system not founded, please make a backup before patching with dual boot.
+	pause
+	exit /b
+	:flash_sd_mod
+	if %boot_type%==1 (
+		"%gnwmanager_path%" flash-patch %system% %sd_patch_internal_backup% %sd_patch_backup% --bootloader
+	) else if %boot_type%==0 (
+		"%gnwmanager_path%" flash-bootloader bank1
+	)
+pause
 exit /b
 
 :run_patch_old
