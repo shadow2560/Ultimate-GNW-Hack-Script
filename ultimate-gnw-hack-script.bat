@@ -92,9 +92,9 @@ goto main
 	if %boot_type%==1 (
 		echo Boot type: Dual boot ^(CFW patch in bank 1 and Retrogo or Zelda3 or Super Mario World in bank 2^)
 	) else if %boot_type%==2 (
-		echo Boot type: Dual boot ^(Retrogo in bank 1 and Zelda3 or Super Mario World in bank 2^)
+		echo Boot type: Dual boot ^(Retrogo in bank 1 and Zelda3 or Super Mario World in bank 2, obsolete^)
 	) else if %boot_type%==3 (
-		echo Boot type: Triple boot ^(Retrogo very limited^)
+		echo Boot type: Triple boot ^(Retrogo very limited, obsolete^)
 	) else (
 		echo Boot type: Single boot
 	)
@@ -158,8 +158,8 @@ exit /b
 	echo 5. Flash GnW-Patch ^(needs Backup files in "game-and-watch-patch" folder^)
 	echo 6. Flash GnW-Patch ^(old method, needs Backup files in "game-and-watch-patch-old_method" folder^)
 	echo 7. Flash GnW-Retro-Go
-	echo 8. Flash GnW-Zelda3
-	echo 9. Flash GnW-Super-Mario-World
+	echo 8. Flash GnW-Zelda3 ^(obsolete^)
+	echo 9. Flash GnW-Super-Mario-World ^(obsolete^)
 	echo.
 	echo -------------------------------------
 	echo.
