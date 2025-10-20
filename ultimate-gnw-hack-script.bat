@@ -157,7 +157,7 @@ exit /b
 	echo 4. GnW-Backup Menu
 	echo 5. Flash GnW-Patch ^(needs Backup files in "game-and-watch-patch" folder^)
 	echo 6. Flash GnW-Patch ^(old method, needs Backup files in "game-and-watch-patch-old_method" folder^)
-	echo 7. Flash patch for SD mod ^(Beta function, only for zelda model, single boot or dual boot with firmware in bank 1 and backup needed in "game-and-watch-backup\backups" or "game-and-watch-patch" or "game-and-watch-patch-old_method" for dual boot config and need at least a nand of 64 MB^)
+	echo 7. Flash patch for SD mod ^(Beta function, only for single boot or dual boot with firmware in bank 1 and backup needed in "game-and-watch-backup\backups" or "game-and-watch-patch" or "game-and-watch-patch-old_method" for dual boot config and need at least a nand of 64 MB^)
 	echo 8. Flash GnW-Retro-Go
 	echo 9. Flash GnW-Zelda3 ^(obsolete^)
 	echo 10. Flash GnW-Super-Mario-World ^(obsolete^)
@@ -733,11 +733,6 @@ exit /b
 	set /a temp_storage_meg=%storage_meg%
 	if %temp_storage_meg% lss 64 (
 		echo Error, 64 MB min for nand storage is required.
-		pause
-		exit /b
-	)
-	if not "%system%"=="zelda" (
-		echo Not possible to use this function with other model than zelda.
 		pause
 		exit /b
 	)
