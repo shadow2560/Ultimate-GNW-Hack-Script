@@ -49,6 +49,7 @@ set adapter=stlink
 set boot_type=1
 set clean_build=1
 set force_pyocd=1
+set gnwmanager_debug=0
 set proc_number=1
 if not "%NUMBER_OF_PROCESSORS%"=="" set proc_number=%NUMBER_OF_PROCESSORS%
 
@@ -100,6 +101,7 @@ goto main
 	)
 	if %clean_build%==1 (echo Clean Build: Enabled) else (echo Clean Build: Disabled)
 	if %force_pyocd%==1 (echo Force Pyocd for Gnwmanager: Enabled) else (echo Force Pyocd for Gnwmanager: Disabled)
+	if %gnwmanager_debug%==1 (echo GNWManager verbosity debug: enabled) else (echo echo GNWManager verbosity debug: disabled)
 	echo Adapter: %adapter%
 	echo.
 	echo Retrogo Settings:
@@ -287,6 +289,7 @@ goto backup_menu
 	echo 5. Toggle Clean Build
 	echo 6. Set Number Of Processor Used For Compilation
 	echo 7. Toggle use of Pyocd for Gnwmanager
+	echo 8. Toggle debug verbosity for GNWManager
 	echo.
 	echo -------------------------------------
 	echo.
@@ -304,8 +307,9 @@ goto backup_menu
 	IF /I '%IN_S%'=='5' set val_s=1 & call :toggle_CB
 	IF /I '%IN_S%'=='6' set val_s=1 & call :set_proc_number
 	IF /I '%IN_S%'=='7' set val_s=1 & call :toggle_pyocd
+	IF /I '%IN_S%'=='8' set val_s=1 & call :toggle_gnwmanager_debug
 	IF /I '%IN_S%'=='Q' exit /b
-	if %val_s%==0	call :invald_input 1 7 "Q."
+	if %val_s%==0	call :invald_input 1 8 "Q."
 	goto settings
 
 :toggle_TB
@@ -328,11 +332,19 @@ exit /b
 	)
 exit /b
 
-:toggle_CB
+:toggle_pyocd
 	if %force_pyocd%==1 (
 		set force_pyocd=0
 	) else (
 		set force_pyocd=1
+	)
+exit /b
+
+:toggle_gnwmanager_debug
+	if %gnwmanager_debug%==1 (
+		set gnwmanager_debug=0
+	) else (
+		set gnwmanager_debug=1
 	)
 exit /b
 
@@ -638,7 +650,7 @@ exit /b
 	if %errorlevel% NEQ 0 cd .. & exit /b
 	call _make_links.cmd "%base_script_path%"
 	cd ..
-	call :run_mingw64 ./game-and-watch-retro-go/, "build.sh %adapter% %system% %storage_meg% %boot_type% %clean_build% %proc_number% %retrogo_savestate% %retrogo_lng% %retrogo_coverflows% %retrogo_screenshots% %retrogo_cheats% %retrogo_shared_hibernate_savestate% %retrogo_splash_screen% %retrogo_old_nes_emulator% %retrogo_old_gb_emulator% %retrogo_single_font% %retrogo_filesystem_size% %force_pyocd% %gnwmanager_path%"
+	call :run_mingw64 ./game-and-watch-retro-go/, "build.sh %adapter% %system% %storage_meg% %boot_type% %clean_build% %proc_number% %retrogo_savestate% %retrogo_lng% %retrogo_coverflows% %retrogo_screenshots% %retrogo_cheats% %retrogo_shared_hibernate_savestate% %retrogo_splash_screen% %retrogo_old_nes_emulator% %retrogo_old_gb_emulator% %retrogo_single_font% %retrogo_filesystem_size% %force_pyocd% %gnwmanager_path%" %gnwmanager_debug%
 	cd game-and-watch-retro-go
 	call _remove_links.cmd
 	cd ..
@@ -707,7 +719,7 @@ exit /b
 		exit /b
 	)
 	if %run_p%==1 (
-		call :run_mingw64 ./game-and-watch-patch/, "build.sh %adapter% %system% %storage_meg% %boot_type% %clean_build% %force_pyocd% %gnwmanager_path%"
+		call :run_mingw64 ./game-and-watch-patch/, "build.sh %adapter% %system% %storage_meg% %boot_type% %clean_build% %force_pyocd% %gnwmanager_path%" %gnwmanager_debug%
 	) else (
 		echo "Missing Backup-Files in game-and-watch-backup."
 		pause
@@ -860,6 +872,7 @@ echo set "adapter=%adapter%">>params.bat
 echo set "boot_type=%boot_type%">>params.bat
 echo set "clean_build=%clean_build%">>params.bat
 echo set "force_pyocd=%force_pyocd%">>params.bat
+echo set "gnwmanager_debug=%gnwmanager_debug%">>params.bat
 echo set "retrogo_savestate=%retrogo_savestate%">>params.bat
 echo set "retrogo_lng=%retrogo_lng%">>params.bat
 echo set "retrogo_coverflows=%retrogo_coverflows%">>params.bat
