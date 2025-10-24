@@ -159,10 +159,11 @@ exit /b
 	echo 4. GnW-Backup Menu
 	echo 5. Flash GnW-Patch ^(needs Backup files in "game-and-watch-patch" folder^)
 	echo 6. Flash GnW-Patch ^(old method, needs Backup files in "game-and-watch-patch-old_method" folder^)
-	echo 7. Flash patch for SD mod ^(Beta function, only for single boot or dual boot with firmware in bank 1 and backup needed in "game-and-watch-backup\backups" or "game-and-watch-patch" or "game-and-watch-patch-old_method" for dual boot config and need at least a nand of 64 MB^)
-	echo 8. Flash GnW-Retro-Go
-	echo 9. Flash GnW-Zelda3 ^(obsolete^)
-	echo 10. Flash GnW-Super-Mario-World ^(obsolete^)
+	echo 7. Flash patch for SD mod directly with GNWManager ^(Beta function, only for single boot or dual boot with firmware in bank 1, backup needed in "game-and-watch-backup\backups" or "game-and-watch-patch" or "game-and-watch-patch-old_method" for dual boot config, need at least a nand of 64 MB^)
+	echo 8. Flash patch for SD mod with Game-and-watch-patch repository  ^(Beta function, only for  dual boot with firmware in bank 1, backup needed in "game-and-watch-backup\backups" or "game-and-watch-patch" or "game-and-watch-patch-old_method", need at least a nand of 64 MB^)
+	echo 9. Flash GnW-Retro-Go
+	echo 10. Flash GnW-Zelda3 ^(obsolete^)
+	echo 11. Flash GnW-Super-Mario-World ^(obsolete^)
 	echo.
 	echo -------------------------------------
 	echo.
@@ -209,9 +210,10 @@ exit /b
 	IF /I '%IN_M%'=='5' set val_m=1 & call :run_patch
 	IF /I '%IN_M%'=='6' set val_m=1 & call :run_patch_old
 	IF /I '%IN_M%'=='7' set val_m=1 & call :run_patch_sd_mod
-	IF /I '%IN_M%'=='8' set val_m=1 & call :run_retrogo
-	IF /I '%IN_M%'=='9' set val_m=1 & call :run_zelda3
-	IF /I '%IN_M%'=='10' set val_m=1 & call :run_smw
+	IF /I '%IN_M%'=='8' set val_m=1 & call :run_patch_sd_mod_gnwpatch
+	IF /I '%IN_M%'=='9' set val_m=1 & call :run_retrogo
+	IF /I '%IN_M%'=='10' set val_m=1 & call :run_zelda3
+	IF /I '%IN_M%'=='11' set val_m=1 & call :run_smw
 	IF /I '%IN_M%'=='S' set val_m=1 & call :settings & call :record_params
 	IF /I '%IN_M%'=='R' set val_m=1 & call :retrogo_settings & call :record_params
 	IF /I '%IN_M%'=='Z' set val_m=1 & call :zelda3_settings & call :record_params
@@ -219,7 +221,7 @@ exit /b
 	IF /I '%IN_M%'=='G' set val_m=1 & call :donate_menu
 	IF /I '%IN_M%'=='Q' set val_m=1 & call :record_params & goto eof
 	IF /I '%IN_M%'=='' set val_m=1
-	if %val_m%==0 call :invald_input 1 10 "Q, G, D, S, R or Z."
+	if %val_m%==0 call :invald_input 1 11 "Q, G, D, S, R or Z."
 goto main
 
 :donate_menu
@@ -417,7 +419,7 @@ goto set_storage
 		IF /I %VALUE% GTR %NUMBER_OF_PROCESSORS% set proc_number=%NUMBER_OF_PROCESSORS% & exit /b
 	)
 	set proc_number=%VALUE%
-	exit /b
+exit /b
 
 :retrogo_settings
 	call :header
@@ -488,7 +490,7 @@ goto set_storage
 	IF /I %VALUE% LSS 0 set retrogo_filesystem_size=0 & exit /b
 	IF /I %VALUE% GTR 99 set retrogo_filesystem_size=99 & exit /b
 	set retrogo_filesystem_size=%VALUE%
-	exit /b
+exit /b
 
 :toggle_retrogo_old_gb_emulator
 	if %retrogo_old_gb_emulator%==1 (
@@ -654,7 +656,7 @@ exit /b
 	cd game-and-watch-retro-go
 	call _remove_links.cmd
 	cd ..
-	exit /b
+exit /b
 
 :run_zelda3
 	if /i NOT "%zelda3_lng%" == "us" (
@@ -677,7 +679,7 @@ exit /b
 		echo "Please put a copy of \"zelda3.sfc\" ^(rom USA^) into folder \".\game-and-watch-zelda3\zelda3\tables\""
 	)
 	pause
-	exit /b
+exit /b
 
 :run_smw
 	if  exist .\game-and-watch-smw\smw\assets\smw.sfc (
@@ -686,11 +688,16 @@ exit /b
 	)
 	echo "Please put a copy of \"smw.sfc\" ^(rom USA of Super Mario World^) into folder \".\game-and-watch-smw\smw\assets\""
 	pause
-	exit /b
+exit /b
 
 :run_patch
+	if not exist "%gnwmanager_path%" (
+		echo GNWManager not founded, please make the libraries installations first ^(choices "1", "2" and "3" in main menu^).
+		pause
+		exit /b
+	)
 	if %boot_type%==0 (
-		echo Not possible to use this function in single mode boot.
+		echo Not possible to use this function in single boot.
 		pause
 		exit /b
 	)
@@ -784,7 +791,61 @@ exit /b
 	) else if %boot_type%==0 (
 		"%gnwmanager_path%" flash-bootloader bank1
 	)
-pause
+	pause
+exit /b
+
+:run_patch_sd_mod_gnwpatch
+	if not exist "%gnwmanager_path%" (
+		echo GNWManager not founded, please make the libraries installations first ^(choices "1", "2" and "3" in main menu^).
+		pause
+		exit /b
+	)
+	if %boot_type%==2 (
+		echo Not possible to use this function in dual boot Retrogo + Zelda3 or Super Mario World.
+		pause
+		exit /b
+	)
+	if %boot_type%==3 (
+		echo Not possible to use this function in triple boot.
+		pause
+		exit /b
+	)
+	if %boot_type%==0 (
+		echo Not possible to use this function in single boot.
+		pause
+		exit /b
+	)
+	set /a temp_storage_meg=%storage_meg%
+	if %temp_storage_meg% lss 64 (
+		echo Error, 64 MB min for nand storage is required.
+		pause
+		exit /b
+	)
+	set run_p=1
+	if NOT exist .\game-and-watch-patch\flash_backup_%system%.bin (
+		if exist .\game-and-watch-patch-old_method\flash_backup_%system%.bin ( copy .\game-and-watch-patch-old_method\flash_backup_%system%.bin .\game-and-watch-patch\ 1>NUL)
+	)
+	if NOT exist .\game-and-watch-patch\flash_backup_%system%.bin (
+		if exist .\game-and-watch-backup\backups\flash_backup_%system%.bin ( copy .\game-and-watch-backup\backups\flash_backup_%system%.bin .\game-and-watch-patch\ 1>NUL ) else (set run_p=0)
+	)
+	if NOT exist .\game-and-watch-patch\internal_flash_backup_%system%.bin (
+		if exist .\game-and-watch-patch-old_method\internal_flash_backup_%system%.bin ( copy .\game-and-watch-patch-old_method\internal_flash_backup_%system%.bin .\game-and-watch-patch\ 1>NUL)
+	)
+	if NOT exist .\game-and-watch-patch\internal_flash_backup_%system%.bin (
+		if exist .\game-and-watch-backup\backups\internal_flash_backup_%system%.bin ( copy .\game-and-watch-backup\backups\internal_flash_backup_%system%.bin .\game-and-watch-patch\ 1>NUL ) else (set run_p=0)
+	)
+	if %run_p%==1 (
+		call :reset_pyocd
+	)
+	if %errorlevel% NEQ 0 (
+		exit /b
+	)
+	if %run_p%==1 (
+		call :run_mingw64 ./game-and-watch-patch/, "build.sh %adapter% %system% %storage_meg% %boot_type% %clean_build% %force_pyocd% %gnwmanager_path%" %gnwmanager_debug% --sd-bootloader
+	) else (
+		echo "Missing Backup-Files in game-and-watch-backup."
+		pause
+	)
 exit /b
 
 :run_patch_old
@@ -863,7 +924,7 @@ exit /b
 		if defined string goto:lengthLoop
 	:end_lengthLoop
 	set %~1=%stringLength%
-	exit /b
+exit /b
 
 :record_params
 echo set "system=%system%">params.bat
