@@ -312,9 +312,9 @@ if "%~0"=="%base_script_path%ultimate-gnw-hack-script-update.bat" (
 		)
 	)
 	call "%language_path%" "main_script_downloading_success"
-	pause
 	copy /V /Y ultimate-gnw-hack-script-update.bat ultimate-gnw-hack-script.bat >nul
-	start /i "" "%windir%\system32\cmd.exe" /c call "ultimate-gnw-hack-script.bat"
+	pause
+	start /i "" "%windir%\system32\cmd.exe" /c call "%base_script_path%ultimate-gnw-hack-script.bat"
 	exit
 ) else (
 	if not "%~0"=="%base_script_path%ultimate-gnw-hack-script-update.bat" (
@@ -379,7 +379,7 @@ goto main
 	call "%language_path%" "main_script_downloading"
 	"_installer\wget.exe" %project_base_download_path%ultimate-gnw-hack-script.bat -O "ultimate-gnw-hack-script-update.bat"
 	IF %errorlevel% EQU 0 (
-		start /i "" "%windir%\system32\cmd.exe" /c call "ultimate-gnw-hack-script-update.bat"
+		start /i "" "%windir%\system32\cmd.exe" /c call "%base_script_path%ultimate-gnw-hack-script-update.bat"
 		exit
 	) else (
 		call "%language_path%" "main_script_downloading_error"

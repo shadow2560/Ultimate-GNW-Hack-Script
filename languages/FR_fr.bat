@@ -91,7 +91,7 @@ goto:eof
 	echo -------------------------------------
 	echo.
 	echo L. Changer la langue
-	echo U. Mettre à jour vers la dernière version du script (alpha test)
+	echo U. Mettre à jour vers la dernière version du script
 	echo S. Menu des paramètres généraux
 	echo R. Menu des paramètres Retrogo
 	echo Z. Menu des paramètres Zelda3 et Super Mario World

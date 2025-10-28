@@ -105,7 +105,7 @@ goto:eof
 	echo -------------------------------------
 	echo.
 	echo L. Change language
-	echo U. Update to the script's latest version (alpha test)
+	echo U. Update to the script's latest version
 	echo S. General Settings Menu
 	echo R. Retrogo Settings Menu
 	echo Z. Zelda3 and Super Mario World Settings Menu
