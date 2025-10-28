@@ -35,6 +35,83 @@ set gnwmanager_path=%base_script_slash_path%_installer/python/tools/scripts/gnwm
 set path=%base_script_path%_installer\resources\openocd;%path%
 set project_base_download_path=https://raw.githubusercontent.com/shadow2560/Ultimate-GNW-Hack-Script/refs/heads/main/
 
+set system=zelda
+set storage_meg=64
+set adapter=stlink
+set boot_type=1
+set clean_build=1
+set force_pyocd=1
+set gnwmanager_debug=0
+set proc_number=1
+if not "%NUMBER_OF_PROCESSORS%"=="" set proc_number=%NUMBER_OF_PROCESSORS%
+
+set retrogo_savestate=1
+set retrogo_lng=1252
+set retrogo_coverflows=0
+set retrogo_screenshots=0
+set retrogo_cheats=0
+set retrogo_shared_hibernate_savestate=0
+set retrogo_splash_screen=0
+set retrogo_old_nes_emulator=0
+set retrogo_old_gb_emulator=0
+set retrogo_single_font=0
+set retrogo_filesystem_size=10
+
+set zelda3_lng=us
+set zelda3_savestate=0
+
+IF EXIST params.bat call params.bat
+
+if "%language%"=="" (
+	call :set_language
+	goto:update_ressources
+) else (
+	set language_path=%base_script_path%languages\%language%.bat
+	if NOT EXIST "!language_path!" (
+		call :set_language
+		goto:update_ressources
+	)
+)
+
+goto:update_ressources
+
+:set_language
+cls
+echo - Select script language -----------------------
+echo.
+echo Note that only the batch will be translated, not the compilation process.
+echo.
+echo Choose language:
+echo 1. English
+echo 2. French
+echo.
+set lng_choice=
+set /p lng_choice=Make your choice: 
+if "%lng_choice%"=="1" (
+	set language=EN_us
+) else if "%lng_choice%"=="2" (
+	set language=FR_fr
+) else (
+	echo You must choose a language.
+	pause
+	goto:set_language
+)
+set language_path=%base_script_path%languages\%language%.bat
+if NOT EXIST "%language_path%" (
+	echo Language file doesn't exist, you probably need to re-download the program, the script will exit.
+	pause
+	exit
+)
+call :record_params
+exit /b
+
+:header
+	CLS
+	call "%language_path%" "set_title"
+	call "%language_path%" "display_header"
+exit /b
+
+:update_ressources
 set /a try_update_count=0
 :update_ressources_start
 set /a try_update_count=%try_update_count%+1
@@ -244,82 +321,6 @@ if "%~0"=="%base_script_path%ultimate-gnw-hack-script-update.bat" (
 		if exist "ultimate-gnw-hack-script-update.bat" del /q "ultimate-gnw-hack-script-update.bat" >nul
 	)
 )
-
-set system=zelda
-set storage_meg=64
-set adapter=stlink
-set boot_type=1
-set clean_build=1
-set force_pyocd=1
-set gnwmanager_debug=0
-set proc_number=1
-if not "%NUMBER_OF_PROCESSORS%"=="" set proc_number=%NUMBER_OF_PROCESSORS%
-
-set retrogo_savestate=1
-set retrogo_lng=1252
-set retrogo_coverflows=0
-set retrogo_screenshots=0
-set retrogo_cheats=0
-set retrogo_shared_hibernate_savestate=0
-set retrogo_splash_screen=0
-set retrogo_old_nes_emulator=0
-set retrogo_old_gb_emulator=0
-set retrogo_single_font=0
-set retrogo_filesystem_size=10
-
-set zelda3_lng=us
-set zelda3_savestate=0
-
-IF EXIST params.bat call params.bat
-
-if "%language%"=="" (
-	call :set_language
-	goto main
-) else (
-	set language_path=%base_script_path%languages\%language%.bat
-	if NOT EXIST "!language_path!" (
-		call :set_language
-		goto main
-	)
-)
-
-goto main
-
-:set_language
-cls
-echo - Select script language -----------------------
-echo.
-echo Note that only the batch will be translated, not the compilation process.
-echo.
-echo Choose language:
-echo 1. English
-echo 2. French
-echo.
-set lng_choice=
-set /p lng_choice=Make your choice: 
-if "%lng_choice%"=="1" (
-	set language=EN_us
-) else if "%lng_choice%"=="2" (
-	set language=FR_fr
-) else (
-	echo You must choose a language.
-	pause
-	goto:set_language
-)
-set language_path=%base_script_path%languages\%language%.bat
-if NOT EXIST "%language_path%" (
-	echo Language file doesn't exist, you probably need to re-download the program, the script will exit.
-	pause
-	exit
-)
-call :record_params
-exit /b
-
-:header
-	CLS
-	call "%language_path%" "set_title"
-	call "%language_path%" "display_header"
-exit /b
 
 :main
 	call :header
