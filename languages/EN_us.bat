@@ -105,16 +105,61 @@ goto:eof
 	echo -------------------------------------
 	echo.
 	echo L. Change language
+	echo U. Update to the script's latest version (alpha test)
 	echo S. General Settings Menu
 	echo R. Retrogo Settings Menu
 	echo Z. Zelda3 and Super Mario World Settings Menu
 	echo D. Restore params to default ^(will also exit the script^)
 	echo G. Make me a donation
 	echo Q. Quit
+	echo 0. Open Github project page
 	echo.
 	echo -------------------------------------
 	echo.
 	SET /P IN_M=Make your choice: 
+goto:eof
+
+:msys2_downloading
+	echo Downloading Msys2 installer...
+goto:eof
+
+:msys2_downloading_error
+	echo Error when downloading Msys2.
+goto:eof
+
+:msys2_install_success
+	echo Installation of Msys2 succesful.
+goto:eof
+
+:msys2_install_error
+	echo Installation of Msys2 failed.
+goto:eof
+
+:main_script_downloading
+	echo Downloading main script...
+goto:eof
+
+:main_script_downloading_error
+	echo Error when downloading main script.
+goto:eof
+
+:script_ressources_downloading
+	echo Downloading script's ressources...
+goto:eof
+
+:main_script_downloading_error_with_retry
+	echo Error when downloading script's ressources, retrying %try_update_count%/2...
+goto:eof
+
+:main_script_downloading_error
+	echo Error when downloading script's ressources, script will not work as intended, concider to update it manualy.
+	echo Script will be closed.
+goto:eof
+
+:main_script_downloading_success
+	echo Script's ressources downloaded succesfuly.
+	echo Remember that you may need to update libraries and Github repositories used by the script via the script's menu.
+	echo The script will restart.
 goto:eof
 
 :display_donate_menu

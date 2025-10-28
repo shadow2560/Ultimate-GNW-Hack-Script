@@ -43,6 +43,224 @@ if '%1'=='ELEV' (del "%vbsGetPrivileges%" 1>nul 2>nul  &  shift /1)
 rem ------------ START OF ACTUAL SCRIPT ------------------------------------------------
 chcp 65001 >nul
 setlocal EnableDelayedExpansion
+
+set base_script_path=%~dp0
+set base_script_slash_path=%base_script_path:\=/%
+set mingw64_path=%base_script_path%\msys2\mingw64.exe
+set gnwmanager_path=%base_script_slash_path%_installer/python/tools/scripts/gnwmanager.exe
+set path=%base_script_path%_installer\resources\openocd;%path%
+set project_base_download_path=https://raw.githubusercontent.com/shadow2560/Ultimate-GNW-Hack-Script/refs/heads/main/
+
+set /a try_update_count=0
+:update_ressources_start
+set /a try_update_count=%try_update_count%+1
+set update_error=0
+if "%~0"=="%base_script_path%ultimate-gnw-hack-script_temp.bat" (
+	call "%language_path%" "script_ressources_downloading"
+	if not exist "_installer\*.*" mkdir "_installer"
+	if not exist "_installer\resources\*.*" mkdir "_installer\resources"
+	if not exist "_installer\resources\game-and-watch-backup\*.*" mkdir "_installer\resources\game-and-watch-backup"
+	if not exist "_installer\resources\game-and-watch-backup\backups\*.*" mkdir "_installer\resources\game-and-watch-backup\backups"
+	if not exist "_installer\resources\game-and-watch-backup\interface\*.*" mkdir "_installer\resources\game-and-watch-backup\interface"
+	if not exist "_installer\resources\game-and-watch-backup\openocd\*.*" mkdir "_installer\resources\game-and-watch-backup\openocd"
+	if not exist "_installer\resources\game-and-watch-backup\target\*.*" mkdir "_installer\resources\game-and-watch-backup\target"
+	if not exist "_installer\resources\game-and-watch-patch\*.*" mkdir "_installer\resources\game-and-watch-patch"
+	if not exist "_installer\resources\game-and-watch-patch\interface\*.*" mkdir "_installer\resources\game-and-watch-patch\interface"
+	if not exist "_installer\resources\game-and-watch-patch\openocd\*.*" mkdir "_installer\resources\game-and-watch-patch\openocd"
+	if not exist "_installer\resources\game-and-watch-patch\target\*.*" mkdir "_installer\resources\game-and-watch-patch\target"
+	if not exist "_installer\resources\game-and-watch-patch-old_method\*.*" mkdir "_installer\resources\game-and-watch-patch-old_method"
+	if not exist "_installer\resources\game-and-watch-patch-old_method\interface\*.*" mkdir "_installer\resources\game-and-watch-patch-old_method\interface"
+	if not exist "_installer\resources\game-and-watch-patch-old_method\openocd\*.*" mkdir "_installer\resources\game-and-watch-patch-old_method\openocd"
+	if not exist "_installer\resources\game-and-watch-patch-old_method\target\*.*" mkdir "_installer\resources\game-and-watch-patch-old_method\target"
+	if not exist "_installer\resources\game-and-watch-retro-go\*.*" mkdir "_installer\resources\game-and-watch-retro-go"
+	if not exist "_installer\resources\game-and-watch-retro-go\interface\*.*" mkdir "_installer\resources\game-and-watch-retro-go\interface"
+	if not exist "_installer\resources\game-and-watch-retro-go\scripts\*.*" mkdir "_installer\resources\game-and-watch-retro-go\scripts"
+	if not exist "_installer\resources\game-and-watch-retro-go\target\*.*" mkdir "_installer\resources\game-and-watch-retro-go\target"
+	if not exist "_installer\resources\game-and-watch-smw\*.*" mkdir "_installer\resources\game-and-watch-smw"
+	if not exist "_installer\resources\game-and-watch-smw\interface\*.*" mkdir "_installer\resources\game-and-watch-smw\interface"
+	if not exist "_installer\resources\game-and-watch-smw\smw\*.*" mkdir "_installer\resources\game-and-watch-smw\smw"
+	if not exist "_installer\resources\game-and-watch-smw\smw\assets\*.*" mkdir "_installer\resources\game-and-watch-smw\smw\assets"
+	if not exist "_installer\resources\game-and-watch-smw\target\*.*" mkdir "_installer\resources\game-and-watch-smw\target"
+	if not exist "_installer\resources\game-and-watch-zelda3\*.*" mkdir "_installer\resources\game-and-watch-zelda3"
+	if not exist "_installer\resources\game-and-watch-zelda3\interface\*.*" mkdir "_installer\resources\game-and-watch-zelda3\interface"
+	if not exist "_installer\resources\game-and-watch-zelda3\target\*.*" mkdir "_installer\resources\game-and-watch-zelda3\target"
+	if not exist "_installer\resources\game-and-watch-zelda3\zelda3\*.*" mkdir "_installer\resources\game-and-watch-zelda3\zelda3"
+	if not exist "_installer\resources\game-and-watch-zelda3\zelda3\tables\*.*" mkdir "_installer\resources\game-and-watch-zelda3\zelda3\tables"
+	if not exist "_installer\resources\openocd\*.*" mkdir "_installer\resources\openocd"
+	if not exist "languages\*.*" mkdir "languages"
+
+	"_installer\wget.exe" -q %project_base_download_path%_installer/wget.exe -O "_installer\wget_temp.exe"
+	IF !errorlevel! NEQ 0 (
+		set update_error=1 & goto:pass_update
+	) else (
+		"%windir%\system32\copy.exe" /B /V /Y "_installer\wget_temp.exe" "_installer\wget.exe" >nul
+		del /q "_installer\wget_temp.exe" >nul
+	)
+
+	"_installer\wget.exe" -q %project_base_download_path%languages/FR_fr.bat -O "languages\FR_fr.bat"
+	IF !errorlevel! NEQ 0 set update_error=1 & goto:pass_update
+	"_installer\wget.exe" -q %project_base_download_path%languages/EN_us.bat -O "languages\EN_us.bat"
+	IF !errorlevel! NEQ 0 set update_error=1 & goto:pass_update
+
+	"_installer\wget.exe" -q %project_base_download_path%LICENSE -O "LICENSE"
+	IF !errorlevel! NEQ 0 set update_error=1 & goto:pass_update
+	"_installer\wget.exe" -q %project_base_download_path%README.md -O "README.md"
+	IF !errorlevel! NEQ 0 set update_error=1 & goto:pass_update
+
+	"_installer\wget.exe" -q %project_base_download_path%_installer/msys2_install.sh -O "_installer\msys2_install.sh"
+	IF !errorlevel! NEQ 0 set update_error=1 & goto:pass_update
+	"_installer\wget.exe" -q %project_base_download_path%_installer/pull_repos.sh -O "_installer\pull_repos.sh"
+	IF !errorlevel! NEQ 0 set update_error=1 & goto:pass_update
+
+	"_installer\wget.exe" -q %project_base_download_path%_installer/resources/libusb-1.0.dll -O "_installer\resources\libusb-1.0.dll"
+	IF !errorlevel! NEQ 0 set update_error=1 & goto:pass_update
+
+	"_installer\wget.exe" -q %project_base_download_path%_installer/resources/game-and-watch-backup/mem_helper.tcl -O "_installer\resources\game-and-watch-backup\mem_helper.tcl"
+	IF !errorlevel! NEQ 0 set update_error=1 & goto:pass_update
+	"_installer\wget.exe" -q %project_base_download_path%_installer/resources/game-and-watch-backup/unlock_gnw.sh -O "_installer\resources\game                                -and-watch-backup\unlock_gnw.sh"
+	IF !errorlevel! NEQ 0 set update_error=1 & goto:pass_update
+	"_installer\wget.exe" -q %project_base_download_path%_installer/resources/game-and-watch-backup/backups/put_GnW_dumps_backups_here.txt -O "_installer\resources\game                                -and-watch-backup\backups\put_GnW_dumps_backups_here.txt"
+	IF !errorlevel! NEQ 0 set update_error=1 & goto:pass_update
+	"_installer\wget.exe" -q %project_base_download_path%_installer/resources/game-and-watch-backup/interface/cmsis-dap.cfg -O "_installer\resources\game                                -and-watch-backup\interface\cmsis-dap.cfg"
+	IF !errorlevel! NEQ 0 set update_error=1 & goto:pass_update
+	"_installer\wget.exe" -q %project_base_download_path%_installer/resources/game-and-watch-backup/interface/stlink.cfg -O "_installer\resources\game                                -and-watch-backup\interface\stlink.cfg"
+	IF !errorlevel! NEQ 0 set update_error=1 & goto:pass_update
+	"_installer\wget.exe" -q %project_base_download_path%_installer/resources/game-and-watch-backup/openocd/interface_pico.cfg -O "_installer\resources\game                                -and-watch-backup\openocd\interface_pico.cfg"
+	IF !errorlevel! NEQ 0 set update_error=1 & goto:pass_update
+	"_installer\wget.exe" -q %project_base_download_path%_installer/resources/game-and-watch-backup/target/stm32h7x.cfg -O "_installer\resources\game                                -and-watch-backup\target\stm32h7x.cfg"
+	IF !errorlevel! NEQ 0 set update_error=1 & goto:pass_update
+	"_installer\wget.exe" -q %project_base_download_path%_installer/resources/game-and-watch-backup/target/stm32h7x_dual_bank.cfg -O "_installer\resources\game                                -and-watch-backup\target\stm32h7x_dual_bank.cfg"
+	IF !errorlevel! NEQ 0 set update_error=1 & goto:pass_update
+	"_installer\wget.exe" -q %project_base_download_path%_installer/resources/game-and-watch-backup/target/swj-dp.tcl -O "_installer\resources\game                                -and-watch-backup\target\swj-dp.tcl"
+	IF !errorlevel! NEQ 0 set update_error=1 & goto:pass_update
+
+	"_installer\wget.exe" -q %project_base_download_path%_installer/resources/game-and-watch-patch/build.sh -O "_installer\resources\game-and-watch-patch\build.sh"
+	IF !errorlevel! NEQ 0 set update_error=1 & goto:pass_update
+	"_installer\wget.exe" -q %project_base_download_path%_installer/resources/game-and-watch-patch/mem_helper.tcl -O "_installer\resources\game-and-watch-patch\mem_helper.tcl"
+	IF !errorlevel! NEQ 0 set update_error=1 & goto:pass_update
+	"_installer\wget.exe" -q %project_base_download_path%_installer/resources/game-and-watch-patch/put_GnW_dumps_backups_here.txt -O "_installer\resources\game-and-watch-patch\put_GnW_dumps_backups_here.txt"
+	IF !errorlevel! NEQ 0 set update_error=1 & goto:pass_update
+	"_installer\wget.exe" -q %project_base_download_path%_installer/resources/game-and-watch-patch/interface/cmsis-dap.cfg -O "_installer\resources\game-and-watch-patch\interface\cmsis-dap.cfg"
+	IF !errorlevel! NEQ 0 set update_error=1 & goto:pass_update
+	"_installer\wget.exe" -q %project_base_download_path%_installer/resources/game-and-watch-patch/interface/stlink.cfg -O "_installer\resources\game-and-watch-patch\interface\stlink.cfg"
+	IF !errorlevel! NEQ 0 set update_error=1 & goto:pass_update
+	"_installer\wget.exe" -q %project_base_download_path%_installer/resources/game-and-watch-patch/openocd/interface_pico.cfg -O "_installer\resources\game-and-watch-patch\openocd\interface_pico.cfg"
+	IF !errorlevel! NEQ 0 set update_error=1 & goto:pass_update
+	"_installer\wget.exe" -q %project_base_download_path%_installer/resources/game-and-watch-patch/target/stm32h7x.cfg -O "_installer\resources\game-and-watch-patch\target\stm32h7x.cfg"
+	IF !errorlevel! NEQ 0 set update_error=1 & goto:pass_update
+	"_installer\wget.exe" -q %project_base_download_path%_installer/resources/game-and-watch-patch/target/swj-dp.tcl -O "_installer\resources\game-and-watch-patch\target\swj-dp.tcl"
+	IF !errorlevel! NEQ 0 set update_error=1 & goto:pass_update
+
+	"_installer\wget.exe" -q %project_base_download_path%_installer/resources/game-and-watch-patch-old_method/build.sh -O "_installer\resources\game-and-watch-patch-old_method\build.sh"
+	IF !errorlevel! NEQ 0 set update_error=1 & goto:pass_update
+	"_installer\wget.exe" -q %project_base_download_path%_installer/resources/game-and-watch-patch-old_method/mem_helper.tcl -O "_installer\resources\game-and-watch-patch-old_method\mem_helper.tcl"
+	IF !errorlevel! NEQ 0 set update_error=1 & goto:pass_update
+	"_installer\wget.exe" -q %project_base_download_path%_installer/resources/game-and-watch-patch-old_method/put_GnW_dumps_backups_here.txt -O "_installer\resources\game-and-watch-patch-old_method\put_GnW_dumps_backups_here.txt"
+	IF !errorlevel! NEQ 0 set update_error=1 & goto:pass_update
+	"_installer\wget.exe" -q %project_base_download_path%_installer/resources/game-and-watch-patch-old_method/interface/cmsis-dap.cfg -O "_installer\resources\game-and-watch-patch-old_method\interface\cmsis-dap.cfg"
+	IF !errorlevel! NEQ 0 set update_error=1 & goto:pass_update
+	"_installer\wget.exe" -q %project_base_download_path%_installer/resources/game-and-watch-patch-old_method/interface/stlink.cfg -O "_installer\resources\game-and-watch-patch-old_method\interface\stlink.cfg"
+	IF !errorlevel! NEQ 0 set update_error=1 & goto:pass_update
+	"_installer\wget.exe" -q %project_base_download_path%_installer/resources/game-and-watch-patch-old_method/openocd/interface_pico.cfg -O "_installer\resources\game-and-watch-patch-old_method\openocd\interface_pico.cfg"
+	IF !errorlevel! NEQ 0 set update_error=1 & goto:pass_update
+	"_installer\wget.exe" -q %project_base_download_path%_installer/resources/game-and-watch-patch-old_method/target/stm32h7x.cfg -O "_installer\resources\game-and-watch-patch-old_method\target\stm32h7x.cfg"
+	IF !errorlevel! NEQ 0 set update_error=1 & goto:pass_update
+	"_installer\wget.exe" -q %project_base_download_path%_installer/resources/game-and-watch-patch-old_method/target/swj-dp.tcl -O "_installer\resources\game-and-watch-patch-old_method\target\swj-dp.tcl"
+	IF !errorlevel! NEQ 0 set update_error=1 & goto:pass_update
+
+	"_installer\wget.exe" -q %project_base_download_path%_installer/resources/game-and-watch-retro-go/mem_helper.tcl -O "_installer\resources\game-and-watch-retro-go\mem_helper.tcl"
+	IF !errorlevel! NEQ 0 set update_error=1 & goto:pass_update
+	"_installer\wget.exe" -q %project_base_download_path%_installer/resources/game-and-watch-retro-go/build.sh -O "_installer\resources\game-and-watch-retro-go\build.sh"
+	IF !errorlevel! NEQ 0 set update_error=1 & goto:pass_update
+	"_installer\wget.exe" -q %project_base_download_path%_installer/resources/game-and-watch-retro-go/_make_links.cmd -O "_installer\resources\game-and-watch-retro-go\_make_links.cmd"
+	IF !errorlevel! NEQ 0 set update_error=1 & goto:pass_update
+	"_installer\wget.exe" -q %project_base_download_path%_installer/resources/game-and-watch-retro-go/_remove_links.cmd -O "_installer\resources\game-and-watch-retro-go\_remove_links.cmd"
+	IF !errorlevel! NEQ 0 set update_error=1 & goto:pass_update
+	"_installer\wget.exe" -q %project_base_download_path%_installer/resources/game-and-watch-retro-go/interface/cmsis-dap.cfg -O "_installer\resources\game-and-watch-retro-go\interface\cmsis-dap.cfg"
+	IF !errorlevel! NEQ 0 set update_error=1 & goto:pass_update
+	"_installer\wget.exe" -q %project_base_download_path%_installer/resources/game-and-watch-retro-go/interface/stlink.cfg -O "_installer\resources\game-and-watch-retro-go\interface\stlink.cfg"
+	IF !errorlevel! NEQ 0 set update_error=1 & goto:pass_update
+	"_installer\wget.exe" -q %project_base_download_path%_installer/resources/game-and-watch-retro-go/scripts/interface_pico.cfg -O "_installer\resources\game-and-watch-retro-go\scripts\interface_pico.cfg"
+	IF !errorlevel! NEQ 0 set update_error=1 & goto:pass_update
+	"_installer\wget.exe" -q %project_base_download_path%_installer/resources/game-and-watch-retro-go/target/stm32h7x.cfg -O "_installer\resources\game-and-watch-retro-go\target\stm32h7x.cfg"
+	IF !errorlevel! NEQ 0 set update_error=1 & goto:pass_update
+	"_installer\wget.exe" -q %project_base_download_path%_installer/resources/game-and-watch-retro-go/target/stm32h7x_dual_bank.cfg -O "_installer\resources\game-and-watch-retro-go\target\stm32h7x_dual_bank.cfg"
+	IF !errorlevel! NEQ 0 set update_error=1 & goto:pass_update
+	"_installer\wget.exe" -q %project_base_download_path%_installer/resources/game-and-watch-retro-go/target/swj-dp.tcl -O "_installer\resources\game-and-watch-retro-go\target\swj-dp.tcl"
+	IF !errorlevel! NEQ 0 set update_error=1 & goto:pass_update
+
+	"_installer\wget.exe" -q %project_base_download_path%_installer/resources/game-and-watch-smw/mem_helper.tcl -O "_installer\resources\game-and-watch-smw\mem_helper.tcl"
+	IF !errorlevel! NEQ 0 set update_error=1 & goto:pass_update
+	"_installer\wget.exe" -q %project_base_download_path%_installer/resources/game-and-watch-smw/build.sh -O "_installer\resources\game-and-watch-smw\build.sh"
+	IF !errorlevel! NEQ 0 set update_error=1 & goto:pass_update
+	"_installer\wget.exe" -q %project_base_download_path%_installer/resources/game-and-watch-smw/interface/cmsis-dap.cfg -O "_installer\resources\game-and-watch-smw\interface\cmsis-dap.cfg"
+	IF !errorlevel! NEQ 0 set update_error=1 & goto:pass_update
+	"_installer\wget.exe" -q %project_base_download_path%_installer/resources/game-and-watch-smw/interface/stlink.cfg -O "_installer\resources\game-and-watch-smw\interface\stlink.cfg"
+	IF !errorlevel! NEQ 0 set update_error=1 & goto:pass_update
+	"_installer\wget.exe" -q %project_base_download_path%_installer/resources/game-and-watch-smw/smw/assets/put_SMW_sfc_roms_here.txt -O "_installer\resources\game-and-watch-smw\smw\assets\put_SMW_sfc_roms_here.txt"
+	IF !errorlevel! NEQ 0 set update_error=1 & goto:pass_update
+	"_installer\wget.exe" -q %project_base_download_path%_installer/resources/game-and-watch-smw/target/stm32h7x.cfg -O "_installer\resources\game-and-watch-smw\target\stm32h7x.cfg"
+	IF !errorlevel! NEQ 0 set update_error=1 & goto:pass_update
+	"_installer\wget.exe" -q %project_base_download_path%_installer/resources/game-and-watch-smw/target/stm32h7x_dual_bank.cfg -O "_installer\resources\game-and-watch-smw\target\stm32h7x_dual_bank.cfg"
+	IF !errorlevel! NEQ 0 set update_error=1 & goto:pass_update
+	"_installer\wget.exe" -q %project_base_download_path%_installer/resources/game-and-watch-smw/target/swj-dp.tcl -O "_installer\resources\game-and-watch-smw\target\swj-dp.tcl"
+	IF !errorlevel! NEQ 0 set update_error=1 & goto:pass_update
+
+	"_installer\wget.exe" -q %project_base_download_path%_installer/resources/game-and-watch-zelda3/mem_helper.tcl -O "_installer\resources\game-and-watch-zelda3\mem_helper.tcl"
+	IF !errorlevel! NEQ 0 set update_error=1 & goto:pass_update
+	"_installer\wget.exe" -q %project_base_download_path%_installer/resources/game-and-watch-zelda3/build.sh -O "_installer\resources\game-and-watch-zelda3\build.sh"
+	IF !errorlevel! NEQ 0 set update_error=1 & goto:pass_update
+	"_installer\wget.exe" -q %project_base_download_path%_installer/resources/game-and-watch-zelda3/interface/cmsis-dap.cfg -O "_installer\resources\game-and-watch-zelda3\interface\cmsis-dap.cfg"
+	IF !errorlevel! NEQ 0 set update_error=1 & goto:pass_update
+	"_installer\wget.exe" -q %project_base_download_path%_installer/resources/game-and-watch-zelda3/interface/stlink.cfg -O "_installer\resources\game-and-watch-zelda3\interface\stlink.cfg"
+	IF !errorlevel! NEQ 0 set update_error=1 & goto:pass_update
+	"_installer\wget.exe" -q %project_base_download_path%_installer/resources/game-and-watch-zelda3/target/stm32h7x.cfg -O "_installer\resources\game-and-watch-zelda3\target\stm32h7x.cfg"
+	IF !errorlevel! NEQ 0 set update_error=1 & goto:pass_update
+	"_installer\wget.exe" -q %project_base_download_path%_installer/resources/game-and-watch-zelda3/target/stm32h7x_dual_bank.cfg -O "_installer\resources\game-and-watch-zelda3\target\stm32h7x_dual_bank.cfg"
+	IF !errorlevel! NEQ 0 set update_error=1 & goto:pass_update
+	"_installer\wget.exe" -q %project_base_download_path%_installer/resources/game-and-watch-zelda3/target/swj-dp.tcl -O "_installer\resources\game-and-watch-zelda3\target\swj-dp.tcl"
+	IF !errorlevel! NEQ 0 set update_error=1 & goto:pass_update
+	"_installer\wget.exe" -q %project_base_download_path%_installer/resources/game-and-watch-zelda3/zelda3/tables/put_zelda3_sfc_roms_here.txt -O "_installer\resources\game-and-watch-zelda3\zelda3\tables\put_zelda3_sfc_roms_here.txt"
+	IF !errorlevel! NEQ 0 set update_error=1 & goto:pass_update
+
+	"_installer\wget.exe" -q %project_base_download_path%_installer/resources/openocd/libcapstone.dll -O "_installer\resources\openocd\libcapstone.dll"
+	IF !errorlevel! NEQ 0 set update_error=1 & goto:pass_update
+	"_installer\wget.exe" -q %project_base_download_path%_installer/resources/openocd/libftdi1.dll -O "_installer\resources\openocd\libftdi1.dll"
+	IF !errorlevel! NEQ 0 set update_error=1 & goto:pass_update
+	"_installer\wget.exe" -q %project_base_download_path%_installer/resources/openocd/libhidapi-0.dll -O "_installer\resources\openocd\libhidapi-0.dll"
+	IF !errorlevel! NEQ 0 set update_error=1 & goto:pass_update
+	"_installer\wget.exe" -q %project_base_download_path%_installer/resources/openocd/libjaylink-0.dll -O "_installer\resources\openocd\libjaylink-0.dll"
+	IF !errorlevel! NEQ 0 set update_error=1 & goto:pass_update
+	"_installer\wget.exe" -q %project_base_download_path%_installer/resources/openocd/libusb-1.0.dll -O "_installer\resources\openocd\libusb-1.0.dll"
+	IF !errorlevel! NEQ 0 set update_error=1 & goto:pass_update
+	"_installer\wget.exe" -q %project_base_download_path%_installer/resources/openocd/openocd.exe -O "_installer\resources\openocd\openocd.exe"
+	IF !errorlevel! NEQ 0 set update_error=1 & goto:pass_update
+
+)
+:pass_update
+if "%~0"=="%base_script_path%ultimate-gnw-hack-script_temp.bat" (
+	if "%update_error%"=="1" (
+		if %try_update_count% LSS 4 (
+			call "%language_path%" "main_script_downloading_error_with_retry"
+			pause
+			goto:update_ressources_start
+		) else (
+			call "%language_path%" "main_script_downloading_error"
+			pause
+			exit
+		)
+	)
+	call "%language_path%" "main_script_downloading_success"
+	pause
+	"%windir%\system32\copy.exe" /V /Y ultimate-gnw-hack-script_temp.bat ultimate-gnw-hack-script.bat >nul
+	start /i "" "%windir%\system32\cmd.exe" /c call "ultimate-gnw-hack-script.bat"
+	exit
+) else (
+	if not "%~0"=="%base_script_path%ultimate-gnw-hack-script_temp.bat" (
+		if exist "ultimate-gnw-hack-script_temp.bat" del /s /q "ultimate-gnw-hack-script_temp.bat" >nul
+	)
+)
+
 set system=zelda
 set storage_meg=64
 set adapter=stlink
@@ -67,12 +285,6 @@ set retrogo_filesystem_size=10
 
 set zelda3_lng=us
 set zelda3_savestate=0
-
-set base_script_path=%~dp0
-set base_script_slash_path=%base_script_path:\=/%
-set mingw64_path=%base_script_path%\msys2\mingw64.exe
-set gnwmanager_path=%base_script_slash_path%_installer/python/tools/scripts/gnwmanager.exe
-set path=%base_script_path%_installer\resources\openocd;%path%
 
 IF EXIST params.bat call params.bat
 
@@ -132,25 +344,25 @@ exit /b
 	call "%language_path%" "display_main_menu"
 	IF /I '%IN_M%'=='1' (
 		set val_m=1
-		echo Downloading Msys2 installer...
+		call "%language_path%" "msys2_downloading"
 		"_installer\wget.exe" -q https://github.com/msys2/msys2-installer/releases/download/2024-01-13/msys2-x86_64-20240113.exe -O "_installer\msys2_installer.exe"
 		IF %errorlevel% EQU 0 (
 			.\_installer\msys2_installer.exe -t "%base_script_path%\msys2" --am --al -c -g ifw.*=true in
 		) else (
-			echo Error when downloading Msys2.
+			call "%language_path%" "msys2_downloading_error"
 			pause
 			goto main
 		)
 		IF %errorlevel% EQU 0 (
 			del /q "_installer\msys2_installer.exe" >nul
 			del /q InstallationLog.txt >nul
-			echo Installation of Msys2 succesful.
+			call "%language_path%" "msys2_install_success"
 			pause
 			goto main
 		) else (
 			del /q "_installer\msys2_installer.exe" >nul
 			del /q InstallationLog.txt >nul
-			echo Installation of Msys2 failed.
+			call "%language_path%" "msys2_install_error"
 			pause
 			goto main
 		)
@@ -165,7 +377,9 @@ exit /b
 	IF /I '%IN_M%'=='9' set val_m=1 & call :run_retrogo
 	IF /I '%IN_M%'=='10' set val_m=1 & call :run_zelda3
 	IF /I '%IN_M%'=='11' set val_m=1 & call :run_smw
+	IF /I '%IN_M%'=='0' set val_m=1 & start "" https://github.com/shadow2560/Ultimate-GNW-Hack-Script
 	IF /I '%IN_M%'=='L' set val_m=1 & call :set_language
+	IF /I '%IN_M%'=='U' set val_m=1 & call :update_script
 	IF /I '%IN_M%'=='S' set val_m=1 & call :settings & call :record_params
 	IF /I '%IN_M%'=='R' set val_m=1 & call :retrogo_settings & call :record_params
 	IF /I '%IN_M%'=='Z' set val_m=1 & call :zelda3_settings & call :record_params
@@ -175,6 +389,19 @@ exit /b
 	IF /I '%IN_M%'=='' set val_m=1
 	if %val_m%==0 call :invalid_input 1 11 "Q, L, G, D, S, R, Z."
 goto main
+
+:update_script
+	call "%language_path%" "main_script_downloading"
+	"_installer\wget.exe" -q %project_base_download_path%ultimate-gnw-hack-script.bat -O "ultimate-gnw-hack-script_temp.bat"
+	IF %errorlevel% EQU 0 (
+		start /i "" "%windir%\system32\cmd.exe" /c call "ultimate-gnw-hack-script_temp.bat"
+		exit
+	) else (
+		call "%language_path%" "main_script_downloading_error"
+		pause
+		exit /b
+	)
+exit
 
 :donate_menu
 	cls

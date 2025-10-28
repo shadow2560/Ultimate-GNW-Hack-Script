@@ -91,16 +91,61 @@ goto:eof
 	echo -------------------------------------
 	echo.
 	echo L. Changer la langue
+	echo U. Mettre à jour vers la dernière version du script (alpha test)
 	echo S. Menu des paramètres généraux
 	echo R. Menu des paramètres Retrogo
 	echo Z. Menu des paramètres Zelda3 et Super Mario World
 	echo D. Restaurer les paramètres par défaut ^(quittera aussi le script^)
 	echo G. Faire un don
 	echo Q. Quitter
+	echo 0. Ouvrir la page Github du projet
 	echo.
 	echo -------------------------------------
 	echo.
 	SET /P IN_M=Faites votre choix : 
+goto:eof
+
+:msys2_downloading
+	echo Téléchargement de l'installateur de Msys2...
+goto:eof
+
+:msys2_downloading_error
+	echo Erreur de téléchargement de Msys2.
+goto:eof
+
+:msys2_install_success
+	echo Installation de Msys2 effectuée.
+goto:eof
+
+:msys2_install_error
+	echo Installation de Msys2 échouée.
+goto:eof
+
+:main_script_downloading
+	echo Téléchargement du script principal...
+goto:eof
+
+:main_script_downloading_error
+	echo Erreur lors du téléchargement du script principal.
+goto:eof
+
+:script_ressources_downloading
+	echo Téléchargement des ressources supplémentaires...
+goto:eof
+
+:main_script_downloading_error_with_retry
+	echo Erreur durant le téléchargement des ressources du script, tentative de retéléchargement  %try_update_count%/2...
+goto:eof
+
+:main_script_downloading_error
+	echo Erreur durant le téléchargement des ressources du script, celui-ci pourrait ne pas fonctionner comme prévu, la mise à jour peut être réessayée  ou une mise à jour manuelle est peut-être nécessaire.
+	echo Le script va être fermé.
+goto:eof
+
+:main_script_downloading_success
+	echo Ressources du script téléchargées avec succès.
+	echo Il peut être aussi nécessaire de mettre à jour les bibliothèques et les dépôts Github utilisés par le script via le menu de celui-ci.
+	echo Le script va redémarrer.
 goto:eof
 
 :display_donate_menu
