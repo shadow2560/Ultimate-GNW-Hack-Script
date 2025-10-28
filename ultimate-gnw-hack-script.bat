@@ -76,109 +76,60 @@ set path=%base_script_path%_installer\resources\openocd;%path%
 
 IF EXIST params.bat call params.bat
 
+if "%language%"=="" (
+	call :set_language
+	goto main
+) else (
+	set language_path=%base_script_path%languages\%language%.bat
+	if NOT EXIST "!language_path!" (
+		call :set_language
+		goto main
+	)
+)
+
 goto main
+
+:set_language
+cls
+echo - Select script language -----------------------
+echo.
+echo Note that only the batch will be translated, not the compilation process.
+echo.
+echo Choose language:
+echo 1. English
+echo 2. French
+echo.
+set lng_choice=
+set /p lng_choice=Make your choice: 
+if "%lng_choice%"=="1" (
+	set language=EN_us
+) else if "%lng_choice%"=="2" (
+	set language=FR_fr
+) else (
+	echo You must choose a language.
+	pause
+	goto:set_language
+)
+set language_path=%base_script_path%languages\%language%.bat
+if NOT EXIST "%language_path%" (
+	echo Language file doesn't exist, you probably need to re-download the program, the script will exit.
+	pause
+	exit
+)
+call :record_params
+exit /b
 
 :header
 	CLS
-	title Ultimate-GNW-Hack-Script v1.0.0
-	echo === Ultimate-GNW-Hack-Script ==
-	echo ========== v1.0.0 by Shadow256, originaly made by ManCloud =========
-	echo -------------------------------------
-	echo.
-	echo General Settings:
-	echo.
-	echo Number of processor cores used for compilation: %proc_number%
-	echo System: %system%
-	echo Selected Storage: %storage_meg% MBytes 
-	if %boot_type%==1 (
-		echo Boot type: Dual boot ^(CFW patch in bank 1 and Retrogo or Zelda3 or Super Mario World in bank 2^)
-	) else if %boot_type%==2 (
-		echo Boot type: Dual boot ^(Retrogo in bank 1 and Zelda3 or Super Mario World in bank 2, obsolete^)
-	) else if %boot_type%==3 (
-		echo Boot type: Triple boot ^(Retrogo very limited, obsolete^)
-	) else (
-		echo Boot type: Single boot
-	)
-	if %clean_build%==1 (echo Clean Build: Enabled) else (echo Clean Build: Disabled)
-	if %force_pyocd%==1 (echo Force Pyocd for Gnwmanager: Enabled) else (echo Force Pyocd for Gnwmanager: Disabled)
-	if %gnwmanager_debug%==1 (echo GNWManager verbosity debug: enabled) else (echo echo GNWManager verbosity debug: disabled)
-	echo Adapter: %adapter%
-	echo.
-	echo Retrogo Settings:
-	echo.
-	if %retrogo_savestate%==1 (echo Retrogo savestates: Enabled) else (echo Retrogo savestates: Disabled)
-	if %retrogo_lng%==1252 (
-		echo Retrogo language: English
-	) else if %retrogo_lng%==932 (
-		echo Retrogo language: Japanese
-	) else if %retrogo_lng%==936 (
-		echo Retrogo language: simple Chinese
-	) else if %retrogo_lng%==950 (
-		echo Retrogo language: traditional Chinese
-	) else if %retrogo_lng%==949 (
-		echo Retrogo language: Korean
-	) else if %retrogo_lng%==12511 (
-		echo Retrogo language: Russian
-	) else if %retrogo_lng%==12521 (
-		echo Retrogo language: Spanish
-	) else if %retrogo_lng%==12522 (
-		echo Retrogo language: Portuguese
-	) else if %retrogo_lng%==12523 (
-		echo Retrogo language: French
-	) else if %retrogo_lng%==12524 (
-		echo Retrogo language: Italian
-	) else if %retrogo_lng%==12525 (
-		echo Retrogo language: German
-	) else (
-		echo Retrogo language: badly configured, verify values in the script
-	)
-	if %retrogo_coverflows%==1 (echo Retrogo coverflows: Enabled) else (echo Retrogo coverflows: Disabled)
-	if %retrogo_screenshots%==1 (echo Retrogo xcreenshots: Enabled) else (echo Retrogo screenshots: Disabled)
-	if %retrogo_cheats%==1 (echo Retrogo cheats: Enabled) else (echo Retrogo cheats: Disabled)
-	if %retrogo_shared_hibernate_savestate%==1 (echo Retrogo shared hibernate savestate: Enabled) else (echo Retrogo shared hibernate savestate: Disabled)
-	if %retrogo_splash_screen%==0 (echo Retrogo splash screen on boot: Enabled) else (echo Retrogo splash screen on boot: Disabled)
-	if %retrogo_old_nes_emulator%==1 (echo Retrogo use old NES emulator: Enabled) else (echo Retrogo use old NES emulator: Disabled)
-	if %retrogo_old_gb_emulator%==1 (echo Retrogo use old GB emulator: Enabled) else (echo Retrogo use old GB emulator: Disabled)
-	if %retrogo_single_font%==1 (echo Retrogo single font: Enabled) else (echo Retrogo single font: Disabled)
-	echo retrogo filesystem_size: %retrogo_filesystem_size%%%
-	echo.
-	echo Zelda3 and Super Mario World Settings:
-	echo.
-	echo Zelda3 language: %zelda3_lng%
-	if %zelda3_savestate%==1 (echo Zelda3 and Super Mario World savestate: Enabled) else (echo Zelda3 and Super Mario World savestate: Disabled)
-	echo.
+	call "%language_path%" "set_title"
+	call "%language_path%" "display_header"
 exit /b
 
 :main
 	call :header
-	echo - [Main Menu] -----------------------
-	echo.
-	echo 1. Install Msys2
-	echo 2. Install/update Build-Environment 
-	echo 3. Init/Update Repos
-	echo 4. GnW-Backup Menu
-	echo 5. Flash GnW-Patch ^(needs Backup files in "game-and-watch-patch" folder^)
-	echo 6. Flash GnW-Patch ^(old method, needs Backup files in "game-and-watch-patch-old_method" folder^)
-	echo 7. Flash patch for SD mod directly with GNWManager ^(Beta function, only for single boot or dual boot with firmware in bank 1, backup needed in "game-and-watch-backup\backups" or "game-and-watch-patch" or "game-and-watch-patch-old_method" for dual boot config, need at least a nand of 64 MB^)
-	echo 8. Flash patch for SD mod with Game-and-watch-patch repository  ^(Beta function, only for  dual boot with firmware in bank 1, backup needed in "game-and-watch-backup\backups" or "game-and-watch-patch" or "game-and-watch-patch-old_method", need at least a nand of 64 MB^)
-	echo 9. Flash GnW-Retro-Go
-	echo 10. Flash GnW-Zelda3 ^(obsolete^)
-	echo 11. Flash GnW-Super-Mario-World ^(obsolete^)
-	echo.
-	echo -------------------------------------
-	echo.
-	echo S. General Settings Menu
-	echo R. Retrogo Settings Menu
-	echo Z. Zelda3 and Super Mario World Settings Menu
-	echo D. Restore params to default ^(will also exit the script^)
-	echo G. Make me a donation
-	echo Q. Quit
-	echo.
-	echo -------------------------------------
-	echo.
 	set val_m=0
 	SET IN_M=
-	SET /P IN_M=Please select a number: 
+	call "%language_path%" "display_main_menu"
 	IF /I '%IN_M%'=='1' (
 		set val_m=1
 		echo Downloading Msys2 installer...
@@ -214,6 +165,7 @@ exit /b
 	IF /I '%IN_M%'=='9' set val_m=1 & call :run_retrogo
 	IF /I '%IN_M%'=='10' set val_m=1 & call :run_zelda3
 	IF /I '%IN_M%'=='11' set val_m=1 & call :run_smw
+	IF /I '%IN_M%'=='L' set val_m=1 & call :set_language
 	IF /I '%IN_M%'=='S' set val_m=1 & call :settings & call :record_params
 	IF /I '%IN_M%'=='R' set val_m=1 & call :retrogo_settings & call :record_params
 	IF /I '%IN_M%'=='Z' set val_m=1 & call :zelda3_settings & call :record_params
@@ -221,22 +173,13 @@ exit /b
 	IF /I '%IN_M%'=='G' set val_m=1 & call :donate_menu
 	IF /I '%IN_M%'=='Q' set val_m=1 & call :record_params & goto eof
 	IF /I '%IN_M%'=='' set val_m=1
-	if %val_m%==0 call :invald_input 1 11 "Q, G, D, S, R or Z."
+	if %val_m%==0 call :invalid_input 1 11 "Q, L, G, D, S, R, Z."
 goto main
 
 :donate_menu
 	cls
-	echo - Donation Menu -----------------
-	echo.
-	echo Thanks in advance for your donation.
-	echo.
-	echo How do you want to do the donation:
-	echo 1. Donate via Paypal if you have a Paypal account ^(open my Paypal page, no transaction fees^)
-	echo 2. Donate by credit card if you don't have a Paypal account ^(opens my Paypal page, transaction fees^)
-	echo Q. Back
-	echo.
 	set action_choice=
-	set /p action_choice=Make your choice: 
+	call "%language_path%" "display_donate_menu"
 	IF "%action_choice%"=="1" (
 		start https://www.paypal.me/shadow256
 		goto:donate_menu
@@ -246,28 +189,13 @@ goto main
 		goto:donate_menu
 	)
 	if /i "%action_choice%"=="Q" exit /b
-	call :invald_input 1 2 "Q." & goto:donate_menu
+	call :invalid_input 1 2 "Q." & goto:donate_menu
 
 :backup_menu
 	call :header
-	echo - [GnW-Backup Menu] -----------------
-	echo.
-	echo 1. Sanity Check
-	echo 2. Backup Ext-Flash
-	echo 3. Backup Int-Flash
-	echo 4. Unlock Device
-	echo 5. Restore Device ^(need Backup files in "game-and-watch-backup\backups" folder^)
-	echo 6. Unlock device with Gnwmanager ^(Beta, perform steps 1 to 5 automaticaly without needed to indicate proper model in settings^)
-	echo -------------------------------------
-	echo.
-	echo S. General Settings Menu
-	echo Q. Back
-	echo.
-	echo -------------------------------------
-	echo.
 	set val_b=0
 	SET IN_B=
-	SET /P IN_B=Please select a number: 
+	call "%language_path%" "display_backup_menu"
 	IF /I '%IN_B%'=='1' set val_b=1 & call :run_mingw64 ./game-and-watch-backup/, "1_sanity_check.sh %adapter% %system%"
 	IF /I '%IN_B%'=='2' set val_b=1 & call :run_mingw64 ./game-and-watch-backup/, "2_backup_flash.sh %adapter% %system%"
 	IF /I '%IN_B%'=='3' set val_b=1 & call :run_mingw64 ./game-and-watch-backup/, "3_backup_internal_flash.sh %adapter% %system%"
@@ -277,31 +205,14 @@ goto main
 	IF /I '%IN_B%'=='S' set val_b=1 & call :settings & call :record_params
 	IF /I '%IN_B%'=='Q' exit /b
 	IF /I '%IN_B%'=='' set val_b=1
-	if %val_b%==0	call :invald_input 1 6 "Q or S."
+	if %val_b%==0	call :invalid_input 1 6 "Q, S."
 goto backup_menu
 
 :settings
 	call :header
-	echo - [Settings Menu ] ------------------
-	echo.
-	echo 1. Change System [mario^|zelda]
-	echo 2. Change Adapter [pico^|stlink]
-	echo 3. Set Storage Size
-	echo 4. Switch between Boot Types
-	echo 5. Toggle Clean Build
-	echo 6. Set Number Of Processor Used For Compilation
-	echo 7. Toggle use of Pyocd for Gnwmanager
-	echo 8. Toggle debug verbosity for GNWManager
-	echo.
-	echo -------------------------------------
-	echo.
-	echo Q. Back
-	echo.
-	echo -------------------------------------
-	echo.
 	set val_s=0
 	SET IN_S=
-	SET /P IN_S=Please select a number: 
+	call "%language_path%" "display_general_settings_menu"
 	IF /I '%IN_S%'=='1' set val_s=1 & call :switch_system
 	IF /I '%IN_S%'=='2' set val_s=1 & call :switch_adapter
 	IF /I '%IN_S%'=='3' set val_s=1 & call :set_storage
@@ -311,7 +222,7 @@ goto backup_menu
 	IF /I '%IN_S%'=='7' set val_s=1 & call :toggle_pyocd
 	IF /I '%IN_S%'=='8' set val_s=1 & call :toggle_gnwmanager_debug
 	IF /I '%IN_S%'=='Q' exit /b
-	if %val_s%==0	call :invald_input 1 8 "Q."
+	if %val_s%==0	call :invalid_input 1 8 "Q."
 	goto settings
 
 :toggle_TB
@@ -368,12 +279,8 @@ exit /b
 
 :set_storage
 	call :header
-	echo - [Setting Storage Size] ------------
-	echo.
 	SET VALUE=
-	echo Please input a Storage Size between 4 and 512MBytes ^(must be a multiple of 2, leave empty to cancel^)
-	SET /P VALUE=Value: 
-
+	call "%language_path%" "display_storage_setting"
 	set true=0
 	IF /I '%VALUE%'=='4' set true=1
 	IF /I '%VALUE%'=='8' set true=1
@@ -385,16 +292,13 @@ exit /b
 	IF /I '%VALUE%'=='512' set true=1
 	IF /I '%VALUE%'=='' exit /b
 	IF /I %true%==1 set "storage_meg=%VALUE%" & exit /b
-	call :invald_input 4 512
+	call :invalid_input 4 512
 goto set_storage
 
 :set_proc_number
 	call :header
-	echo - [Setting Number Of Processors] ------------
-	echo.
 	SET VALUE=
-	echo Please input a number of processor^(s^), leave empty to cancel^)
-	SET /P VALUE=Value: 
+	call "%language_path%" "display_proc_number_setting"
 	IF /I '%VALUE%'=='' exit /b
 	call :strlen nb "%VALUE%"
 	set i=0
@@ -409,7 +313,7 @@ goto set_storage
 			)
 		)
 		IF "!check_chars!"=="0" (
-		echo Unauthorised char for proc number value.
+		call "%language_path%" "proc_number_value_char_error"
 		pause
 		goto :set_proc_number
 		)
@@ -423,29 +327,9 @@ exit /b
 
 :retrogo_settings
 	call :header
-	echo - [Retrogo Settings Menu ] ------------------
-	echo.
-	echo 1. Toggle Retrogo savestate
-	echo 2. Set default UI language
-	echo 3. Toggle Coverflows
-	echo 4. Toggle Screenshots
-	echo 5. Toggle Cheat Codes
-	echo 6. Toggle Shared Hibernate Savestate
-	echo 7. Toggle Splash Screen On Boot
-	echo 8. Toggle Usage Of The Old NES Emulator
-	echo 9. Toggle Usage Of The Old Gameboy Emulator
-	echo 10. Toggle Usage Of Single Font
-	echo 11. Set Retrogo Filesystem Size
-	echo.
-	echo -------------------------------------
-	echo.
-	echo Q. Back
-	echo.
-	echo -------------------------------------
-	echo.
 	set val_r=0
 	SET IN_R=
-	SET /P IN_R=Please select a number: 
+	call "%language_path%" "display_retrogo_settings_menu"
 	IF /I '%IN_R%'=='1' set val_r=1 & call :toggle_retrogo_savestate
 	IF /I '%IN_R%'=='2' set val_r=1 & call :set_retrogo_lng
 	IF /I '%IN_R%'=='3' set val_r=1 & call :toggle_retrogo_coverflows
@@ -458,16 +342,13 @@ exit /b
 	IF /I '%IN_R%'=='10' set val_r=1 & call :toggle_retrogo_single_font
 	IF /I '%IN_R%'=='11' set val_r=1 & call :set_retrogo_filesystem_size
 	IF /I '%IN_R%'=='Q' exit /b
-	if %val_r%==0	call :invald_input 1 11 "Q."
+	if %val_r%==0	call :invalid_input 1 11 "Q."
 	goto retrogo_settings
 
 :set_retrogo_filesystem_size
 	call :header
-	echo - [Setting Retrogo Filesystem Size] ------------
-	echo.
 	SET VALUE=
-	echo Please input a size in %% for Retrogo filesystem ^(0 to 99, leave empty to cancel^)
-	SET /P VALUE=Value: 
+	call "%language_path%" "display_retrogo_filesystem_size_setting"
 	IF /I '%VALUE%'=='' exit /b
 	call :strlen nb "%VALUE%"
 	set i=0
@@ -482,7 +363,7 @@ exit /b
 			)
 		)
 		IF "!check_chars!"=="0" (
-		echo Unauthorised char for filesystem size value.
+		call "%language_path%" "retrogo_filesystem_value_char_error"
 		pause
 		goto :set_retrogo_filesystem_size
 		)
@@ -518,23 +399,8 @@ exit /b
 
 :set_retrogo_lng
 	call :header
-	echo - [Setting Retrogo Language] ------------
-	echo.
 	SET VALUE=
-	echo 1. English
-	echo 2. French
-	echo 3. German
-	echo 4. Italian
-	echo 5. Portuguese
-	echo 6. Russian
-	echo 7. Spanish
-	echo 8. Japanese
-	echo 9. simple Chinese
-	echo 10. traditional Chinese
-	echo 11. Korean
-	echo Q. Back
-	echo.
-	SET /P VALUE=Please select a number: 
+	call "%language_path%" "display_retrogo_language_param"
 	IF /I '%VALUE%'=='1' set retrogo_lng=1252 & exit /b
 	IF /I '%VALUE%'=='2' set retrogo_lng=12523 & exit /b
 	IF /I '%VALUE%'=='3' set retrogo_lng=12525 & exit /b
@@ -547,7 +413,7 @@ exit /b
 	IF /I '%VALUE%'=='10' set retrogo_lng=950 & exit /b
 	IF /I '%VALUE%'=='11' set retrogo_lng=949 & exit /b
 	IF /I '%VALUE%'=='Q' exit /b
-	call :invald_input 1 11 "Q."
+	call :invalid_input 1 11 "Q."
 goto set_retrogo_lng
 
 :toggle_retrogo_coverflows
@@ -600,33 +466,19 @@ exit /b
 
 :zelda3_settings
 	call :header
-	echo - [Zelda3 and Super Mario World Settings Menu ] ------------------
-	echo.
-	echo 1. Set Zelda3 Language Code
-	echo 2. Toggle Zelda3 and Super Mario World Savestate
-	echo.
-	echo -------------------------------------
-	echo.
-	echo Q. Back
-	echo.
-	echo -------------------------------------
-	echo.
 	set val_z=0
 	SET IN_Z=
-	SET /P IN_Z=Please select a number: 
+	call "%language_path%" "display_zelda3_settings_menu"
 	IF /I '%IN_Z%'=='1' set val_z=1 & call :set_zelda3_lng
 	IF /I '%IN_Z%'=='2' set val_z=1 & call :toggle_zelda3_savestate
 	IF /I '%IN_Z%'=='Q' exit /b
-	if %val_z%==0	call :invald_input 1 2 "Q."
+	if %val_z%==0	call :invalid_input 1 2 "Q."
 	goto zelda3_settings
 
 :set_zelda3_lng
 	call :header
-	echo - [Setting Zelda3 language] ------------
-	echo.
 	SET zelda3_lng=us
-	echo Please input a language code for zelda3 translation, if different than "us" you will need to also put the rom containing the language named "zelda3_[language_code].sfc" into the folder "game-and-watch-zelda3\zelda3\tables" in addition of the US rom of zelda3 named "zelda3.sfc" ^(if empty value language will be set to "us"^).
-	SET /P zelda3_lng=Zelda3 language value: 
+	call "%language_path%" "display_zelda3_language_param"
 exit /b
 
 :toggle_zelda3_savestate
@@ -674,9 +526,9 @@ exit /b
 	)
 )
 	if /i NOT "%zelda3_lng%" == "us" (
-		echo "Please put a copy of \"zelda3_%zelda3_lng%.sfc\" ^(rom with the language wanted^) and \"zelda3.sfc\" ^(rom USA^) into \".\game-and-watch-zelda3\zelda3\tables\""
+		call "%language_path%" "zelda3_file_missing_not_us_version"
 	) else (
-		echo "Please put a copy of \"zelda3.sfc\" ^(rom USA^) into folder \".\game-and-watch-zelda3\zelda3\tables\""
+		call "%language_path%" "zelda3_file_missing_us_version"
 	)
 	pause
 exit /b
@@ -686,23 +538,23 @@ exit /b
 		call :run_mingw64 ./game-and-watch-smw/, "build.sh %adapter% %system% %storage_meg% %boot_type% %clean_build% %proc_number% %zelda3_savestate%"
 		goto:eof
 	)
-	echo "Please put a copy of \"smw.sfc\" ^(rom USA of Super Mario World^) into folder \".\game-and-watch-smw\smw\assets\""
+	call "%language_path%" "smw_missing_file"
 	pause
 exit /b
 
 :run_patch
 	if not exist "%gnwmanager_path%" (
-		echo GNWManager not founded, please make the libraries installations first ^(choices "1", "2" and "3" in main menu^).
+		call "%language_path%" "gnwmanager_not_installed_error"
 		pause
 		exit /b
 	)
 	if %boot_type%==0 (
-		echo Not possible to use this function in single boot.
+		call "%language_path%" "single_boot_not_authorized"
 		pause
 		exit /b
 	)
 	if %boot_type%==2 (
-		echo Not possible to use this function in dual boot Retrogo + Zelda3 or Super Mario World.
+		call "%language_path%" "dual_boot_2_not_authorized"
 		pause
 		exit /b
 	)
@@ -728,30 +580,30 @@ exit /b
 	if %run_p%==1 (
 		call :run_mingw64 ./game-and-watch-patch/, "build.sh %adapter% %system% %storage_meg% %boot_type% %clean_build% %force_pyocd% %gnwmanager_path%" %gnwmanager_debug%
 	) else (
-		echo "Missing Backup-Files in game-and-watch-backup."
+		call "%language_path%" "backups_not_founded_error"
 		pause
 	)
 exit /b
 
 :run_patch_sd_mod
 	if not exist "%gnwmanager_path%" (
-		echo GNWManager not founded, please make the libraries installations first ^(choices "1", "2" and "3" in main menu^).
+		call "%language_path%" "gnwmanager_not_installed_error"
 		pause
 		exit /b
 	)
 	if %boot_type%==2 (
-		echo Not possible to use this function in dual boot Retrogo + Zelda3 or Super Mario World.
+		call "%language_path%" "dual_boot_2_not_authorized"
 		pause
 		exit /b
 	)
 	if %boot_type%==3 (
-		echo Not possible to use this function in triple boot.
+		call "%language_path%" "tripple_boot_not_authorized"
 		pause
 		exit /b
 	)
 	set /a temp_storage_meg=%storage_meg%
 	if %temp_storage_meg% lss 64 (
-		echo Error, 64 MB min for nand storage is required.
+		call "%language_path%" "need_64_mb_storage_error"
 		pause
 		exit /b
 	)
@@ -782,7 +634,7 @@ exit /b
 	) else (
 		goto:flash_sd_mod
 	)
-	echo Backups of the system not founded, please make a backup before patching with dual boot.
+	call "%language_path%" "backups_not_founded_error"
 	pause
 	exit /b
 	:flash_sd_mod
@@ -796,28 +648,28 @@ exit /b
 
 :run_patch_sd_mod_gnwpatch
 	if not exist "%gnwmanager_path%" (
-		echo GNWManager not founded, please make the libraries installations first ^(choices "1", "2" and "3" in main menu^).
+		call "%language_path%" "gnwmanager_not_installed_error"
 		pause
 		exit /b
 	)
 	if %boot_type%==2 (
-		echo Not possible to use this function in dual boot Retrogo + Zelda3 or Super Mario World.
+		call "%language_path%" "dual_boot_2_not_authorized"
 		pause
 		exit /b
 	)
 	if %boot_type%==3 (
-		echo Not possible to use this function in triple boot.
+		call "%language_path%" "tripple_boot_not_authorized"
 		pause
 		exit /b
 	)
 	if %boot_type%==0 (
-		echo Not possible to use this function in single boot.
+		call "%language_path%" "single_boot_not_authorized"
 		pause
 		exit /b
 	)
 	set /a temp_storage_meg=%storage_meg%
 	if %temp_storage_meg% lss 64 (
-		echo Error, 64 MB min for nand storage is required.
+		call "%language_path%" "need_64_mb_storage_error"
 		pause
 		exit /b
 	)
@@ -843,19 +695,19 @@ exit /b
 	if %run_p%==1 (
 		call :run_mingw64 ./game-and-watch-patch/, "build.sh %adapter% %system% %storage_meg% %boot_type% %clean_build% %force_pyocd% %gnwmanager_path%" %gnwmanager_debug% --sd-bootloader
 	) else (
-		echo "Missing Backup-Files in game-and-watch-backup."
+		call "%language_path%" "backups_not_founded_error"
 		pause
 	)
 exit /b
 
 :run_patch_old
 	if %boot_type%==0 (
-		echo Not possible to use this function in single mode boot.
+		call "%language_path%" "single_boot_not_authorized"
 		pause
 		exit /b
 	)
 	if %boot_type%==2 (
-		echo Not possible to use this function in dual boot Retrogo + Zelda3 or Super Mario World.
+		call "%language_path%" "dual_boot_2_not_authorized"
 		pause
 		exit /b
 	)
@@ -875,7 +727,7 @@ exit /b
 	if %run_p%==1 (
 		call :run_mingw64 ./game-and-watch-patch-old_method/, "build.sh %adapter% %system% %storage_meg% %boot_type% %clean_build%"
 	) else (
-		echo "Missing Backup-Files in game-and-watch-backup."
+		call "%language_path%" "backups_not_founded_error"
 		pause
 	)
 exit /b
@@ -887,20 +739,19 @@ exit /b
 	::echo export GCC_PATH="%base_script_slash_path%arm-gnu-toolchain-13.2.Rel1-mingw-w64-i686-arm-none-eabi/bin/" >> _tmp\launch.sh
 	::echo export GCC_PATH="%base_script_slash_path%msys2/mingw64/bin/" >> _tmp\launch.sh
 	echo ./%~2 >> _tmp\launch.sh
-	echo read -p ^"Press enter to continue^" >> _tmp\launch.sh
+	call "%language_path%" "pause_for_msys_scripts"
 	"%mingw64_path%" ./_tmp/launch.sh
 	call :wait "mintty.exe"
 	rd /s /q _tmp
 exit /b
 
-:invald_input
+:invalid_input
 	CLS
-	ECHO ============INVALID INPUT============
-	ECHO -------------------------------------
-	ECHO      Please select a number from 
+	call "%language_path%" "invalid_input_start"
 	echo                [%~1-%~2] 
 	if not "%~3"=="" (
-		echo        or select letter^(s^) %~3
+		call "%language_path%" "invalid_input_letters"
+		echo %~3
 	)
 	ECHO -------------------------------------
 	PAUSE
@@ -927,7 +778,8 @@ exit /b
 exit /b
 
 :record_params
-echo set "system=%system%">params.bat
+echo set "language=%language%">params.bat
+echo set "system=%system%">>params.bat
 echo set "storage_meg=%storage_meg%">>params.bat
 echo set "adapter=%adapter%">>params.bat
 echo set "boot_type=%boot_type%">>params.bat
@@ -952,16 +804,9 @@ exit /b
 :reset_pyocd
 	set pyocd_confirm=
 	IF %force_pyocd% EQU 1 (
-		echo Trying to reboot the device in flash mode for Pyocd, please wait...
+		call "%language_path%" "reset_pyocd_wait"
 		%gnwmanager_path% -b pyocd info >nul
-		echo The device should be in flash mode, on the next screen if you see a message witch say ^"Waiting for a debug prob to be connected^" just disconect and reconect the adapter.
-		echo If you're not in flash mode reboot the device, disconect the adapter and retry.
-		echo.
-		echo C. Cancel
-		echo O. Validate that you are in flash mode
-		echo All other choices: Retry
-		echo.
-		set /p pyocd_confirm=Make your choice: 
+		call "%language_path%" "reset_pyocd_confirm"
 	)
 IF %force_pyocd% EQU 1 (	
 		if /i "%pyocd_confirm%"=="c" exit /b 1
