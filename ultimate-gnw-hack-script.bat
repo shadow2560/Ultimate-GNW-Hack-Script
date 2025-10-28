@@ -55,7 +55,7 @@ set /a try_update_count=0
 :update_ressources_start
 set /a try_update_count=%try_update_count%+1
 set update_error=0
-if "%~0"=="%base_script_path%ultimate-gnw-hack-script_temp.bat" (
+if "%~0"=="%base_script_path%ultimate-gnw-hack-script-update.bat" (
 	call "%language_path%" "script_ressources_downloading"
 	if not exist "_installer\*.*" mkdir "_installer"
 	if not exist "_installer\resources\*.*" mkdir "_installer\resources"
@@ -93,7 +93,7 @@ if "%~0"=="%base_script_path%ultimate-gnw-hack-script_temp.bat" (
 	IF !errorlevel! NEQ 0 (
 		set update_error=1 & goto:pass_update
 	) else (
-		"%windir%\system32\copy.exe" /B /V /Y "_installer\wget_temp.exe" "_installer\wget.exe" >nul
+		copy /B /V /Y "_installer\wget_temp.exe" "_installer\wget.exe" >nul
 		del /q "_installer\wget_temp.exe" >nul
 	)
 
@@ -117,21 +117,21 @@ if "%~0"=="%base_script_path%ultimate-gnw-hack-script_temp.bat" (
 
 	"_installer\wget.exe" -q %project_base_download_path%_installer/resources/game-and-watch-backup/mem_helper.tcl -O "_installer\resources\game-and-watch-backup\mem_helper.tcl"
 	IF !errorlevel! NEQ 0 set update_error=1 & goto:pass_update
-	"_installer\wget.exe" -q %project_base_download_path%_installer/resources/game-and-watch-backup/unlock_gnw.sh -O "_installer\resources\game                                -and-watch-backup\unlock_gnw.sh"
+	"_installer\wget.exe" -q %project_base_download_path%_installer/resources/game-and-watch-backup/unlock_gnw.sh -O "_installer\resources\game-and-watch-backup\unlock_gnw.sh"
 	IF !errorlevel! NEQ 0 set update_error=1 & goto:pass_update
-	"_installer\wget.exe" -q %project_base_download_path%_installer/resources/game-and-watch-backup/backups/put_GnW_dumps_backups_here.txt -O "_installer\resources\game                                -and-watch-backup\backups\put_GnW_dumps_backups_here.txt"
+	"_installer\wget.exe" -q %project_base_download_path%_installer/resources/game-and-watch-backup/backups/put_GnW_dumps_backups_here.txt -O "_installer\resources\game-and-watch-backup\backups\put_GnW_dumps_backups_here.txt"
 	IF !errorlevel! NEQ 0 set update_error=1 & goto:pass_update
-	"_installer\wget.exe" -q %project_base_download_path%_installer/resources/game-and-watch-backup/interface/cmsis-dap.cfg -O "_installer\resources\game                                -and-watch-backup\interface\cmsis-dap.cfg"
+	"_installer\wget.exe" -q %project_base_download_path%_installer/resources/game-and-watch-backup/interface/cmsis-dap.cfg -O "_installer\resources\game-and-watch-backup\interface\cmsis-dap.cfg"
 	IF !errorlevel! NEQ 0 set update_error=1 & goto:pass_update
-	"_installer\wget.exe" -q %project_base_download_path%_installer/resources/game-and-watch-backup/interface/stlink.cfg -O "_installer\resources\game                                -and-watch-backup\interface\stlink.cfg"
+	"_installer\wget.exe" -q %project_base_download_path%_installer/resources/game-and-watch-backup/interface/stlink.cfg -O "_installer\resources\game-and-watch-backup\interface\stlink.cfg"
 	IF !errorlevel! NEQ 0 set update_error=1 & goto:pass_update
-	"_installer\wget.exe" -q %project_base_download_path%_installer/resources/game-and-watch-backup/openocd/interface_pico.cfg -O "_installer\resources\game                                -and-watch-backup\openocd\interface_pico.cfg"
+	"_installer\wget.exe" -q %project_base_download_path%_installer/resources/game-and-watch-backup/openocd/interface_pico.cfg -O "_installer\resources\game-and-watch-backup\openocd\interface_pico.cfg"
 	IF !errorlevel! NEQ 0 set update_error=1 & goto:pass_update
-	"_installer\wget.exe" -q %project_base_download_path%_installer/resources/game-and-watch-backup/target/stm32h7x.cfg -O "_installer\resources\game                                -and-watch-backup\target\stm32h7x.cfg"
+	"_installer\wget.exe" -q %project_base_download_path%_installer/resources/game-and-watch-backup/target/stm32h7x.cfg -O "_installer\resources\game-and-watch-backup\target\stm32h7x.cfg"
 	IF !errorlevel! NEQ 0 set update_error=1 & goto:pass_update
-	"_installer\wget.exe" -q %project_base_download_path%_installer/resources/game-and-watch-backup/target/stm32h7x_dual_bank.cfg -O "_installer\resources\game                                -and-watch-backup\target\stm32h7x_dual_bank.cfg"
+	"_installer\wget.exe" -q %project_base_download_path%_installer/resources/game-and-watch-backup/target/stm32h7x_dual_bank.cfg -O "_installer\resources\game-and-watch-backup\target\stm32h7x_dual_bank.cfg"
 	IF !errorlevel! NEQ 0 set update_error=1 & goto:pass_update
-	"_installer\wget.exe" -q %project_base_download_path%_installer/resources/game-and-watch-backup/target/swj-dp.tcl -O "_installer\resources\game                                -and-watch-backup\target\swj-dp.tcl"
+	"_installer\wget.exe" -q %project_base_download_path%_installer/resources/game-and-watch-backup/target/swj-dp.tcl -O "_installer\resources\game-and-watch-backup\target\swj-dp.tcl"
 	IF !errorlevel! NEQ 0 set update_error=1 & goto:pass_update
 
 	"_installer\wget.exe" -q %project_base_download_path%_installer/resources/game-and-watch-patch/build.sh -O "_installer\resources\game-and-watch-patch\build.sh"
@@ -238,7 +238,7 @@ if "%~0"=="%base_script_path%ultimate-gnw-hack-script_temp.bat" (
 
 )
 :pass_update
-if "%~0"=="%base_script_path%ultimate-gnw-hack-script_temp.bat" (
+if "%~0"=="%base_script_path%ultimate-gnw-hack-script-update.bat" (
 	if "%update_error%"=="1" (
 		if %try_update_count% LSS 4 (
 			call "%language_path%" "main_script_downloading_error_with_retry"
@@ -252,12 +252,12 @@ if "%~0"=="%base_script_path%ultimate-gnw-hack-script_temp.bat" (
 	)
 	call "%language_path%" "main_script_downloading_success"
 	pause
-	"%windir%\system32\copy.exe" /V /Y ultimate-gnw-hack-script_temp.bat ultimate-gnw-hack-script.bat >nul
+	copy /V /Y ultimate-gnw-hack-script-update.bat ultimate-gnw-hack-script.bat >nul
 	start /i "" "%windir%\system32\cmd.exe" /c call "ultimate-gnw-hack-script.bat"
 	exit
 ) else (
-	if not "%~0"=="%base_script_path%ultimate-gnw-hack-script_temp.bat" (
-		if exist "ultimate-gnw-hack-script_temp.bat" del /s /q "ultimate-gnw-hack-script_temp.bat" >nul
+	if not "%~0"=="%base_script_path%ultimate-gnw-hack-script-update.bat" (
+		if exist "ultimate-gnw-hack-script-update.bat" del /q "ultimate-gnw-hack-script-update.bat" >nul
 	)
 )
 
@@ -347,7 +347,7 @@ exit /b
 		call "%language_path%" "msys2_downloading"
 		"_installer\wget.exe" -q https://github.com/msys2/msys2-installer/releases/download/2024-01-13/msys2-x86_64-20240113.exe -O "_installer\msys2_installer.exe"
 		IF %errorlevel% EQU 0 (
-			.\_installer\msys2_installer.exe -t "%base_script_path%\msys2" --am --al -c -g ifw.*=true in
+			.\_installer\msys2_installer.exe -t "%base_script_path%msys2" --am --al -c -g ifw.*=true in
 		) else (
 			call "%language_path%" "msys2_downloading_error"
 			pause
@@ -392,15 +392,16 @@ goto main
 
 :update_script
 	call "%language_path%" "main_script_downloading"
-	"_installer\wget.exe" -q %project_base_download_path%ultimate-gnw-hack-script.bat -O "ultimate-gnw-hack-script_temp.bat"
+	"_installer\wget.exe" %project_base_download_path%ultimate-gnw-hack-script.bat -O "ultimate-gnw-hack-script-update.bat"
 	IF %errorlevel% EQU 0 (
-		start /i "" "%windir%\system32\cmd.exe" /c call "ultimate-gnw-hack-script_temp.bat"
+		start /i "" "%windir%\system32\cmd.exe" /c call "ultimate-gnw-hack-script-update.bat"
 		exit
 	) else (
 		call "%language_path%" "main_script_downloading_error"
 		pause
 		exit /b
 	)
+pause
 exit
 
 :donate_menu
