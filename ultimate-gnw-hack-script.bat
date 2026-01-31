@@ -233,9 +233,9 @@ if "%~0"=="%base_script_path%ultimate-gnw-hack-script-update.bat" (
 	IF !errorlevel! NEQ 0 set update_error=1 & goto:pass_update
 	"_installer\wget.exe" -q %project_base_download_path%_installer/resources/game-and-watch-retro-go/build.sh -O "_installer\resources\game-and-watch-retro-go\build.sh"
 	IF !errorlevel! NEQ 0 set update_error=1 & goto:pass_update
-	"_installer\wget.exe" -q %project_base_download_path%_installer/resources/game-and-watch-retro-go/_make_links.cmd -O "_installer\resources\game-and-watch-retro-go\_make_links.cmd"
+	rem "_installer\wget.exe" -q %project_base_download_path%_installer/resources/game-and-watch-retro-go/_make_links.cmd -O "_installer\resources\game-and-watch-retro-go\_make_links.cmd"
 	IF !errorlevel! NEQ 0 set update_error=1 & goto:pass_update
-	"_installer\wget.exe" -q %project_base_download_path%_installer/resources/game-and-watch-retro-go/_remove_links.cmd -O "_installer\resources\game-and-watch-retro-go\_remove_links.cmd"
+	rem "_installer\wget.exe" -q %project_base_download_path%_installer/resources/game-and-watch-retro-go/_remove_links.cmd -O "_installer\resources\game-and-watch-retro-go\_remove_links.cmd"
 	IF !errorlevel! NEQ 0 set update_error=1 & goto:pass_update
 	"_installer\wget.exe" -q %project_base_download_path%_installer/resources/game-and-watch-retro-go/interface/cmsis-dap.cfg -O "_installer\resources\game-and-watch-retro-go\interface\cmsis-dap.cfg"
 	IF !errorlevel! NEQ 0 set update_error=1 & goto:pass_update
@@ -715,11 +715,11 @@ exit /b
 		call :reset_pyocd
 	)
 	if %errorlevel% NEQ 0 cd .. & exit /b
-	call _make_links.cmd "%base_script_path%"
+	rem call _make_links.cmd "%base_script_path%"
 	cd ..
 	call :run_mingw64 ./game-and-watch-retro-go/, "build.sh %adapter% %system% %storage_meg% %boot_type% %clean_build% %proc_number% %retrogo_savestate% %retrogo_lng% %retrogo_coverflows% %retrogo_screenshots% %retrogo_cheats% %retrogo_shared_hibernate_savestate% %retrogo_splash_screen% %retrogo_old_nes_emulator% %retrogo_old_gb_emulator% %retrogo_single_font% %retrogo_filesystem_size% %force_pyocd% %gnwmanager_path%" %gnwmanager_debug%
 	cd game-and-watch-retro-go
-	call _remove_links.cmd
+	rem call _remove_links.cmd
 	cd ..
 exit /b
 
