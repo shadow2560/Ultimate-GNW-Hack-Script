@@ -1,4 +1,5 @@
 /_installer/.wget-hsts
+/_installer/openhelper/openhelper.exe
 /_installer/python
 /_installer/nuget.exe
 /_installer/resources/game-and-watch-backup/backups/*.bin

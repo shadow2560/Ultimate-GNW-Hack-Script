@@ -1,12 +1,12 @@
 goto:%~1
 
 :set_title
-	title Ultimate-GNW-Hack-Script v1.0.0
+	title Ultimate-GNW-Hack-Script v%ugnwhs_version%
 goto:eof
 
 :display_header
 	echo === Ultimate-GNW-Hack-Script ==
-	echo ========== v1.0.0 par Shadow256, créé à l’origine par ManCloud =========
+	echo ========== v%ugnwhs_version% par Shadow256, créé à l’origine par ManCloud =========
 	echo -------------------------------------
 	echo.
 	echo Paramètres généraux :
@@ -85,8 +85,10 @@ goto:eof
 	echo 7. Flasher le patch SD mod directement avec GNWManager ^(fonction bêta, uniquement pour single boot ou dual boot avec le firmware dans bank 1, sauvegarde requise dans "game-and-watch-backup\backups" ou "game-and-watch-patch" ou "game-and-watch-patch-old_method" pour la configuration dual boot, nécessite au moins une NAND de 64 Mo^)
 	echo 8. Flasher le patch SD mod avec le dépôt Game-and-watch-patch  ^(fonction bêta, uniquement pour dual boot avec le firmware dans bank 1, sauvegarde requise dans les mêmes dossiers, nécessite au moins une NAND de 64 Mo^)
 	echo 9. Flasher GnW-Retro-Go
-	echo 10. Flasher GnW-Zelda3 ^(obsolète^)
-	echo 11. Flasher GnW-Super-Mario-World ^(obsolète^)
+	echo 10. Sauvegarder les savestates de Retrogo
+	echo 11. Restaurer les savestates de Retrogo
+	echo 12. Flasher GnW-Zelda3 ^(obsolète^)
+	echo 13. Flasher GnW-Super-Mario-World ^(obsolète^)
 	echo.
 	echo -------------------------------------
 	echo.
@@ -358,4 +360,20 @@ goto:eof
 
 :invalid_input_letters
 	echo        ou sélectionnez la lettre :
+goto:eof
+
+:output_folder_backup_retrogo_savestates_choice
+	echo Vous allez devoir sélectionner le dossier vers lequel sauvegarder les savestates.
+	pause
+	%windir%\system32\wscript.exe //Nologo _installer\openhelper\select_dir.vbs "tempvar.txt" "Sélection du dossier"
+goto:eof
+
+:input_folder_restore_retrogo_savestates_choice
+	echo Vous allez devoir sélectionner le dossier depuis lequel restaurer les savestates.
+	pause
+	%windir%\system32\wscript.exe //Nologo _installer\openhelper\select_dir.vbs "tempvar.txt" "Sélection du dossier"
+goto:eof
+
+:folder_choice_empty_error
+	echo Aucun dossier sélectionné, fonction annulée.
 goto:eof

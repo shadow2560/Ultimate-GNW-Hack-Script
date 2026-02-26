@@ -61,4 +61,5 @@ If you want to know more about SD mod please visit the [retrogo sd mod project o
 * [Game-and-watch-smw](https://github.com/marian-m12l/game-and-watch-smw)
 * [Game-and-watch-zelda3](https://github.com/marian-m12l/game-and-watch-zelda3)
 * All libraries used by Msys2 and Python.
+* The openhelper used to select a file or a folder during the script, based on [these sources from my Ultimate-Switch-Hack-Script project](https://github.com/shadow2560/Ultimate-Switch-Hack-Script/tree/master/tools/Storage/functions/openhelper_src)
 * And all programs that I may forget to credit here.

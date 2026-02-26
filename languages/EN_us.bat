@@ -15,12 +15,12 @@ if "%lng_label_exist%"=="0" (
 )
 
 :set_title
-	title Ultimate-GNW-Hack-Script v1.0.0
+	title Ultimate-GNW-Hack-Script v%ugnwhs_version%
 goto:eof
 
 :display_header
 	echo === Ultimate-GNW-Hack-Script ==
-	echo ========== v1.0.0 by Shadow256, originaly made by ManCloud =========
+	echo ========== v%ugnwhs_version% by Shadow256, originaly made by ManCloud =========
 	echo -------------------------------------
 	echo.
 	echo General Settings:
@@ -99,8 +99,10 @@ goto:eof
 	echo 7. Flash patch for SD mod directly with GNWManager ^(Beta function, only for single boot or dual boot with firmware in bank 1, backup needed in "game-and-watch-backup\backups" or "game-and-watch-patch" or "game-and-watch-patch-old_method" for dual boot config, need at least a nand of 64 MB^)
 	echo 8. Flash patch for SD mod with Game-and-watch-patch repository  ^(Beta function, only for  dual boot with firmware in bank 1, backup needed in "game-and-watch-backup\backups" or "game-and-watch-patch" or "game-and-watch-patch-old_method", need at least a nand of 64 MB^)
 	echo 9. Flash GnW-Retro-Go
-	echo 10. Flash GnW-Zelda3 ^(obsolete^)
-	echo 11. Flash GnW-Super-Mario-World ^(obsolete^)
+	echo 10. Backup Retrogo's savestates
+	echo 11. Restore Retrogo's savestates
+	echo 12. Flash GnW-Zelda3 ^(obsolete^)
+	echo 13. Flash GnW-Super-Mario-World ^(obsolete^)
 	echo.
 	echo -------------------------------------
 	echo.
@@ -372,4 +374,20 @@ goto:eof
 
 :invalid_input_letters
 	echo        or select the letter:
+goto:eof
+
+:output_folder_backup_retrogo_savestates_choice
+	echo You will need to select the folder where will be  saved the savestates.
+	pause
+	%windir%\system32\wscript.exe //Nologo _installer\openhelper\select_dir.vbs "tempvar.txt" "Folder select"
+goto:eof
+
+:input_folder_restore_retrogo_savestates_choice
+	echo You will need to select the folder from  where the savestates will be restored.
+	pause
+	%windir%\system32\wscript.exe //Nologo _installer\openhelper\select_dir.vbs "tempvar.txt" "Folder select"
+goto:eof
+
+:folder_choice_empty_error
+	echo No folder selected, function canceled.
 goto:eof

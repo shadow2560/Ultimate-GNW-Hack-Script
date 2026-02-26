@@ -28,6 +28,8 @@ rem ------------ START OF ACTUAL SCRIPT ----------------------------------------
 chcp 65001 >nul
 setlocal EnableDelayedExpansion
 
+set ugnwhs_version=1.1.0
+
 set base_script_path=%~dp0
 set base_script_slash_path=%base_script_path:\=/%
 set mingw64_path=%base_script_path%\msys2\mingw64.exe
@@ -171,6 +173,8 @@ if "%~0"=="%base_script_path%ultimate-gnw-hack-script-update.bat" (
 	"_installer\wget.exe" -q %project_base_download_path%_installer/msys2_install.sh -O "_installer\msys2_install.sh"
 	IF !errorlevel! NEQ 0 set update_error=1 & goto:pass_update
 	"_installer\wget.exe" -q %project_base_download_path%_installer/pull_repos.sh -O "_installer\pull_repos.sh"
+	IF !errorlevel! NEQ 0 set update_error=1 & goto:pass_update
+	"_installer\wget.exe" -q %project_base_download_path%_installer/openhelper.exe -O "_installer\openhelper.exe"
 	IF !errorlevel! NEQ 0 set update_error=1 & goto:pass_update
 
 	"_installer\wget.exe" -q %project_base_download_path%_installer/resources/libusb-1.0.dll -O "_installer\resources\libusb-1.0.dll"
@@ -360,8 +364,10 @@ if "%~0"=="%base_script_path%ultimate-gnw-hack-script-update.bat" (
 	IF /I '%IN_M%'=='7' set val_m=1 & call :run_patch_sd_mod
 	IF /I '%IN_M%'=='8' set val_m=1 & call :run_patch_sd_mod_gnwpatch
 	IF /I '%IN_M%'=='9' set val_m=1 & call :run_retrogo
-	IF /I '%IN_M%'=='10' set val_m=1 & call :run_zelda3
-	IF /I '%IN_M%'=='11' set val_m=1 & call :run_smw
+	IF /I '%IN_M%'=='10' set val_m=1 & call :run_backup_retrogo_savestates
+	IF /I '%IN_M%'=='11' set val_m=1 & call :run_restore_retrogo_savestates
+	IF /I '%IN_M%'=='12' set val_m=1 & call :run_zelda3
+	IF /I '%IN_M%'=='13' set val_m=1 & call :run_smw
 	IF /I '%IN_M%'=='0' set val_m=1 & start "" https://github.com/shadow2560/Ultimate-GNW-Hack-Script
 	IF /I '%IN_M%'=='L' set val_m=1 & call :set_language
 	IF /I '%IN_M%'=='U' set val_m=1 & call :update_script
@@ -372,7 +378,7 @@ if "%~0"=="%base_script_path%ultimate-gnw-hack-script-update.bat" (
 	IF /I '%IN_M%'=='G' set val_m=1 & call :donate_menu
 	IF /I '%IN_M%'=='Q' set val_m=1 & call :record_params & goto eof
 	IF /I '%IN_M%'=='' set val_m=1
-	if %val_m%==0 call :invalid_input 1 11 "Q, L, G, D, S, R, Z."
+	if %val_m%==0 call :invalid_input 1 13 "Q, L, G, D, S, R, Z."
 goto main
 
 :update_script
@@ -721,6 +727,56 @@ exit /b
 	cd game-and-watch-retro-go
 	rem call _remove_links.cmd
 	cd ..
+exit /b
+
+:run_backup_retrogo_savestates
+	set /a temp_force_pyocd=%force_pyocd%
+	set /a force_pyocd=1
+	call :reset_pyocd
+	if %errorlevel% NEQ 0 (
+		set /a force_pyocd=%temp_force_pyocd%
+		exit /b
+	)
+	call "%language_path%" "output_folder_backup_retrogo_savestates_choice"
+	set /p output_folder=<tempvar.txt
+	del /q tempvar.txt >nul
+	IF "%output_folder%"=="" (
+		call "%language_path%" "folder_choice_empty_error"
+		pause
+		set /a force_pyocd=%temp_force_pyocd%
+		exit /b
+	)
+	IF NOT "%output_folder%"=="" set output_folder=%output_folder%\
+	IF NOT "%output_folder%"=="" set output_folder=%output_folder:\\=\%
+	IF NOT "%output_folder%"=="" set output_folder=%output_folder:\=/%
+	%gnwmanager_path% -b pyocd pull savestate "%output_folder%"
+	pause
+	set /a force_pyocd=%temp_force_pyocd%
+exit /b
+
+:run_restore_retrogo_savestates
+	set /a temp_force_pyocd=%force_pyocd%
+	set /a force_pyocd=1
+	call :reset_pyocd
+	if %errorlevel% NEQ 0 (
+		set /a force_pyocd=%temp_force_pyocd%
+		exit /b
+	)
+	call "%language_path%" "input_folder_restore_retrogo_savestates_choice"
+	set /p output_folder=<tempvar.txt
+	del /q tempvar.txt >nul
+	IF "%output_folder%"=="" (
+		call "%language_path%" "folder_choice_empty_error"
+		pause
+		set /a force_pyocd=%temp_force_pyocd%
+		exit /b
+	)
+	IF NOT "%output_folder%"=="" set output_folder=%output_folder%\
+	IF NOT "%output_folder%"=="" set output_folder=%output_folder:\\=\%
+	IF NOT "%output_folder%"=="" set output_folder=%output_folder:\=/%
+	%gnwmanager_path% -b pyocd mkdir savestate -- push savestate "%output_folder%/*"
+	pause
+	set /a force_pyocd=%temp_force_pyocd%
 exit /b
 
 :run_zelda3
