@@ -28,7 +28,7 @@ rem ------------ START OF ACTUAL SCRIPT ----------------------------------------
 chcp 65001 >nul
 setlocal EnableDelayedExpansion
 
-set ugnwhs_version=1.1.0
+set ugnwhs_version=1.1.1
 
 set base_script_path=%~dp0
 set base_script_slash_path=%base_script_path:\=/%
@@ -122,6 +122,7 @@ if "%~0"=="%base_script_path%ultimate-gnw-hack-script-update.bat" (
 	call "%language_path%" "script_ressources_downloading"
 	if not exist "_installer\*.*" mkdir "_installer"
 	if not exist "_installer\resources\*.*" mkdir "_installer\resources"
+	if not exist "_installer\openhelper\*.*" mkdir "_installer\openhelper"
 	if not exist "_installer\resources\game-and-watch-backup\*.*" mkdir "_installer\resources\game-and-watch-backup"
 	if not exist "_installer\resources\game-and-watch-backup\backups\*.*" mkdir "_installer\resources\game-and-watch-backup\backups"
 	if not exist "_installer\resources\game-and-watch-backup\interface\*.*" mkdir "_installer\resources\game-and-watch-backup\interface"
@@ -174,7 +175,14 @@ if "%~0"=="%base_script_path%ultimate-gnw-hack-script-update.bat" (
 	IF !errorlevel! NEQ 0 set update_error=1 & goto:pass_update
 	"_installer\wget.exe" -q %project_base_download_path%_installer/pull_repos.sh -O "_installer\pull_repos.sh"
 	IF !errorlevel! NEQ 0 set update_error=1 & goto:pass_update
-	"_installer\wget.exe" -q %project_base_download_path%_installer/openhelper.exe -O "_installer\openhelper.exe"
+
+	"_installer\wget.exe" -q %project_base_download_path%_installer/openhelper/open_file.vbs -O "_installer\openhelper/open_file.vbs"
+	IF !errorlevel! NEQ 0 set update_error=1 & goto:pass_update
+	"_installer\wget.exe" -q %project_base_download_path%_installer/openhelper/open_file2.vbs -O "_installer\openhelper/open_file2.vbs"
+	IF !errorlevel! NEQ 0 set update_error=1 & goto:pass_update
+	"_installer\wget.exe" -q %project_base_download_path%_installer/openhelper/openhelper.b64 -O "_installer\openhelper/openhelper.b64"
+	IF !errorlevel! NEQ 0 set update_error=1 & goto:pass_update
+	"_installer\wget.exe" -q %project_base_download_path%_installer/openhelper/select_dir.vbs -O "_installer\openhelper/select_dir.vbs"
 	IF !errorlevel! NEQ 0 set update_error=1 & goto:pass_update
 
 	"_installer\wget.exe" -q %project_base_download_path%_installer/resources/libusb-1.0.dll -O "_installer\resources\libusb-1.0.dll"
