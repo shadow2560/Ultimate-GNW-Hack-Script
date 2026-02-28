@@ -782,7 +782,7 @@ exit /b
 	IF NOT "%output_folder%"=="" set output_folder=%output_folder%\
 	IF NOT "%output_folder%"=="" set output_folder=%output_folder:\\=\%
 	IF NOT "%output_folder%"=="" set output_folder=%output_folder:\=/%
-	%gnwmanager_path% -b pyocd mkdir savestate -- push savestate "%output_folder%/*"
+	%gnwmanager_path% -b pyocd mkdir savestate -- push savestate %output_folder%/*
 	pause
 	set /a force_pyocd=%temp_force_pyocd%
 exit /b
