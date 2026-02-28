@@ -22,7 +22,7 @@ run=1
 
 if [ ! -z "$run" ]; then
 	size=$3
-	fs_size=$(((($size*1024*1024)*${17})/100))
+	((fs_size=$((((size*${17})/100)*1024*1024))))
 	if [ $5 -ge 1 ]; then make clean; fi
 	if [ $4 -ge 3 ]; then
 		if [ $size -eq 4 ]; then #triple boot 4MB

@@ -28,7 +28,7 @@ rem ------------ START OF ACTUAL SCRIPT ----------------------------------------
 chcp 65001 >nul
 setlocal EnableDelayedExpansion
 
-set ugnwhs_version=1.1.1
+set ugnwhs_version=1.1.2
 
 set base_script_path=%~dp0
 set base_script_slash_path=%base_script_path:\=/%
