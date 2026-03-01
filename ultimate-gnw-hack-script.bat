@@ -28,7 +28,7 @@ rem ------------ START OF ACTUAL SCRIPT ----------------------------------------
 chcp 65001 >nul
 setlocal EnableDelayedExpansion
 
-set ugnwhs_version=1.1.4
+set ugnwhs_version=1.1.6
 
 set base_script_path=%~dp0
 set base_script_slash_path=%base_script_path:\=/%
@@ -782,7 +782,7 @@ exit /b
 	IF NOT "%output_folder%"=="" set output_folder=%output_folder%\
 	IF NOT "%output_folder%"=="" set output_folder=%output_folder:\\=\%
 	IF NOT "%output_folder%"=="" set output_folder=%output_folder:\=/%
-	%gnwmanager_path% -b pyocd mkdir savestate
+	rem %gnwmanager_path% -b pyocd mkdir savestate
 	%gnwmanager_path% -b pyocd push / "%output_folder%savestate"
 	pause
 	set /a force_pyocd=%temp_force_pyocd%

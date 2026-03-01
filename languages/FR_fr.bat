@@ -369,7 +369,7 @@ goto:eof
 goto:eof
 
 :input_folder_restore_retrogo_savestates_choice
-	echo Vous allez devoir sélectionner le dossier depuis lequel restaurer les savestates.
+	echo Vous allez devoir sélectionner le dossier depuis lequel restaurer les savestates ^(dossier contenant le dossier "savestate"^).
 	pause
 	%windir%\system32\wscript.exe //Nologo _installer\openhelper\select_dir.vbs "tempvar.txt" "Sélection du dossier"
 goto:eof
